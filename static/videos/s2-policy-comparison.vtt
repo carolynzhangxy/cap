@@ -1,0 +1,12 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:01.000
+Initial conditions. The clock is paused before the recorded initial mode selection.
+
+00:00:01.000 --> 00:00:02.000
+Recorded initial mode selection. q follows the saved jump events.
+
+00:00:02.000 --> 00:00:32.417
+Red: true trajectory. Dashed white: estimated position. Blue rover: physical heading at the displayed sample.
+Original additive nonholonomic controller. 32 times simulated speed; completed runs hold.
+Full-frame use is cumulative over the saved image updates.

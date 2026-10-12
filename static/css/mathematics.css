@@ -1,0 +1,45 @@
+/* Equations compiled from LaTeX with self-hosted KaTeX and dedicated math fonts. */
+.math-card{background:#fff;border:1px solid #dce4d4;border-radius:12px;padding:30px 34px;margin:28px 0;color:#40543f;min-width:0}.math-card .eyebrow{font-size:10px;color:#65805c;letter-spacing:.13em;margin-bottom:10px}.math-card h3{font-size:29px;line-height:1.2;margin:0 0 18px}.math-card p{font-size:14px;line-height:1.85;margin:14px 0;color:#586c51}.math-card details{margin-top:20px;padding-top:18px;border-top:1px solid #e3e9db}.math-card summary{color:#355b3a;font-size:14px;line-height:1.6;cursor:pointer}.math-fold>summary{font-family:Georgia,serif;font-size:23px}.math-notes{padding-top:12px}.math-display{overflow-x:auto;overflow-y:hidden;max-width:100%;padding:24px 20px;background:#f6f8f1;border-left:2px solid #aec69a;border-radius:0 6px 6px 0;margin:20px 0;color:#233c2e;scrollbar-width:thin}.math-display>.katex-display{font-size:18px;margin:0;min-width:max-content}.math-display .katex-display>.katex{white-space:nowrap}.math-display:focus-visible{outline:2px solid #87a779;outline-offset:4px}.controller-math{margin-top:24px}.math-card:target{scroll-margin-top:36px;border-color:#89a878}.math-card sub,.math-card sup{line-height:0}.guide-formula{overflow-wrap:anywhere;line-height:1.7!important}
+@media(max-width:650px){.math-card{padding:22px 18px;margin:24px 0}.math-card h3{font-size:25px}.math-card p{font-size:13px}.math-card summary{font-size:13px}.math-fold>summary{font-size:21px}.math-display{padding:20px 14px}.math-display>.katex-display{font-size:16px}}
+
+/* Anchor the visually hidden MathML to its equation so it cannot widen the page. */
+.katex{position:relative}.katex .katex-mathml{left:0;top:0}
+/* Preserve KaTeX's internal line heights and accent positioning. */
+.math-inline{white-space:nowrap}.math-inline>.katex{font-size:1.08em}.scene-method .math-display{margin:18px 0;max-width:100%}.scene-equation-label{font-family:Georgia,serif;font-size:21px!important;color:#355b3a!important}.guide-formula{overflow-x:auto;overflow-y:hidden;max-width:100%;padding-top:14px;padding-bottom:14px;min-width:0}.guide-formula>.katex{font-size:1.12em}.figure-guide-detail{min-width:0}.figure-guide-reading{min-width:0}
+
+@media(max-width:650px){.math-inline{display:inline-block;max-width:100%;vertical-align:middle;overflow-x:auto;overflow-y:hidden;padding:2px 1px;scrollbar-width:thin}}
+
+/* Symbol exploration uses paint-only emphasis, preserving KaTeX metrics. */
+.katex .math-term{cursor:help;border-radius:3px;transition:background-color .15s,box-shadow .15s}
+.katex .math-term:hover,.katex .math-term:focus-visible,.katex .math-term-active{background:rgba(151,194,171,.3);box-shadow:0 0 0 3px rgba(151,194,171,.18);outline:none}
+.katex .math-term:focus-visible{outline:2px solid #417969;outline-offset:3px}
+.math-explore-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:20px 0 -16px;padding:0 2px;color:#798675;font:11px/1.5 system-ui,sans-serif;letter-spacing:.01em}
+.math-explore-button{border:0;background:transparent;padding:7px 0 7px 12px;color:#3d7061;font:600 11px/1.4 system-ui,sans-serif;cursor:pointer}
+.math-explore-button:hover{color:#1c493a;text-decoration:underline;text-underline-offset:3px}
+.math-explore-button:focus-visible,.math-term-popover button:focus-visible{outline:2px solid #407d6a;outline-offset:3px}
+.math-term-popover{position:fixed;z-index:12000;box-sizing:border-box;width:376px;max-width:calc(100vw - 28px);max-height:min(640px,calc(100dvh - 28px));overflow-y:auto;overscroll-behavior:contain;padding:20px 22px 15px;border:1px solid #cfddd2;border-radius:18px;background:#fffef9;color:#273e35;box-shadow:0 14px 65px #233d2e29,0 2px 6px #233d2e0d;font:14px/1.6 system-ui,-apple-system,sans-serif;scrollbar-width:thin;text-align:left}
+.math-term-popover[hidden]{display:none}
+.math-term-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.math-term-context{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#668373;font-weight:600}
+.math-term-close{display:grid;place-content:center;flex-shrink:0;width:28px;height:28px;margin:-7px -8px 0 0;border:0;border-radius:50%;font:24px/1 system-ui;background:transparent;color:#688275;cursor:pointer}
+.math-term-close:hover{background:#edf2e9}
+.math-term-heading{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.math-term-symbol{padding:7px 12px;background:#edf3e9;border:1px solid #dce7d6;border-radius:9px;min-width:40px;box-sizing:border-box;text-align:center;flex-shrink:0;font-size:22px;color:#305b48}
+.math-term-heading h4{margin:0;font:500 23px/1.15 Georgia,serif;letter-spacing:-.02em;color:#2f4a3b}
+.math-term-description{margin:0 0 17px!important;font:13px/1.75 system-ui,sans-serif!important;color:#526156!important;overflow-wrap:break-word}
+.math-term-section-label{font:600 9px/1.5 system-ui,sans-serif;letter-spacing:.11em;color:#81917e;margin:13px 0 7px}
+.math-term-related{display:flex;flex-wrap:wrap;gap:6px}
+.math-term-chip{display:inline-flex;align-items:center;gap:7px;border:1px solid #e0e7d9;border-radius:7px;background:#f8faf4;padding:5px 8px;color:#48644f;cursor:pointer;text-align:left;font:11px/1.35 system-ui,sans-serif}
+.math-term-chip>.katex,.math-term-chip>span:first-child{font-size:15px;color:#315644}
+.math-term-chip:hover{background:#edf4e7;border-color:#b9cbb0}
+.math-term-equation-terms{display:flex;flex-wrap:wrap;gap:5px;max-height:100px;overflow:auto;padding:3px}
+.math-term-equation-chip{min-width:29px;padding:5px 7px;border:1px solid #e0e7d9;background:white;border-radius:6px;color:#49644e;font-size:15px;cursor:pointer}
+.math-term-equation-chip[aria-pressed=true]{background:#dceada;border-color:#93b48b;color:#24482b}
+.math-term-equation-chip:hover{background:#eef4e8}
+.math-term-footer{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #e4e9dc;padding-top:12px;margin-top:16px;color:#8b9587;font-size:10px;line-height:1.5}
+.math-term-pin{padding:5px 8px;background:#eff4e9;border:1px solid #dce6d3;border-radius:6px;color:#426247;font:600 10px/1.5 system-ui,sans-serif;cursor:pointer;white-space:nowrap}
+.math-term-popover[data-pinned=true]{border-color:#9ebc9f}
+.math-interaction-intro{display:flex;gap:12px;align-items:center;color:#657d62;font:13px/1.65 system-ui,sans-serif;background:#f0f5e9;border:1px solid #dce7d2;border-radius:10px;padding:14px 18px;margin:24px 0}
+.math-interaction-intro>span:first-child{font:italic 25px/1 Georgia,serif;color:#426e4c}
+@media(max-width:650px){.math-term-popover{padding:17px 18px 13px;width:350px}.math-term-heading h4{font-size:21px}.math-term-description{font-size:13px!important}.math-explore-bar>span{font-size:0}.math-explore-bar>span:after{content:'Tap a symbol to explore';font-size:10px}.math-term-chip{min-height:32px}.math-term-equation-chip{min-width:35px;min-height:35px}.math-term-close{width:34px;height:34px}.math-interaction-intro{font-size:12px}}
+@media(prefers-reduced-motion:reduce){.katex .math-term{transition:none}}

@@ -1,0 +1,134 @@
+{
+  "id": "s0-scene",
+  "title": "Vision-based source seeking: illustrative 3D replay",
+  "file": "static/videos/s0-scene.mp4",
+  "fps": 24,
+  "duration_s": 50.375,
+  "width": 1920,
+  "height": 1080,
+  "type": "illustrative rendering, not an experimental video",
+  "trajectory_id": "8dd5e848037a6ab3",
+  "trace_sha256": "321f70146c5d0599c433580940730e429872d7874d593615990547e0140933f5",
+  "frames_sha256": "7476d3aba93984d85e2c1bed742f6714ffb2638f415edc8ca6574caa68485988",
+  "playback_speed": null,
+  "initial_condition_hold_s": 2.0,
+  "initial_switch_hold_s": 2.0,
+  "scene_labels": {
+    "in_scene_text": false,
+    "separate_legend": true
+  },
+  "mode_history": {
+    "initial_mode": 2,
+    "switches": [
+      {
+        "simulation_time_s": 0.0,
+        "from": 2,
+        "to": 1
+      }
+    ],
+    "post_jump_mode_constant": true,
+    "explanation": "The first trace sample at t=0 is after the initial jump. The two startup holds show pre-jump and post-jump states at t=0; no simulated time is added."
+  },
+  "view": {
+    "projection": "orthographic oblique",
+    "fixed_camera_center": [
+      0,
+      0
+    ],
+    "camera_height_wu": 4.8,
+    "camera_look_direction": [
+      0,
+      0,
+      -1
+    ],
+    "camera_footprint_half_extent_wu": 4.02,
+    "inset_pixels": [
+      356,
+      356
+    ]
+  },
+  "renderer": "scripts/replay-renderer.js; native browser canvas, shared first-scene artwork and solid rover geometry",
+  "appearance": "The same detailed ground texture, natural boulder, blue solid rover, and supplied gray camera drone as the interactive setup. A square orthographic inset uses the matching fixed world footprint. Objects are illustrative and not the Isaac Sim experimental vehicle. A separate lightly washed-out local crop isolates short exploratory strokes; the fixed full overhead scene stays visible.",
+  "terrain_asset": {
+    "file": "dist/static/scene-realism/terrain.webp",
+    "sha256": "55e3f8cd973a986de77fd229ac60aabc7371fe2da37ef71f9536d73eded856c3",
+    "provenance": "assets/paper-scene/terrain-reference-v2.json"
+  },
+  "video_sha256": "1da434430a986cd8c68325b2a7969a9636fdcbf0b4b5bb3e05df8fb23312cb4c",
+  "size_bytes": 5730513,
+  "simulation_duration_s": 875.8999999999994,
+  "end_hold_s": 3.0656250000000185,
+  "rendering_revision": "2026-10-12-s0-visibility-v7",
+  "algorithm_audit": "data/recorded-controller-audit.json",
+  "algorithm_audit_sha256": "85f02f58b861ffab6689d2b64236d0cb8572fc7c8e8739f08eb2689caeefef21",
+  "rendering": "Original 0.02 s capture-time positions and estimates, plus exact terminal sample. Thicker high-contrast paths; an equal-axis local crop displays the preceding 0.60 s. All views use one continuous clock with 32x overview and a 0.125x slow-motion interval at recorded seconds 100\u2013102. Heading = heading0+2*pi*sqrt(omega)*capture_s/T. Mode follows initial_mode and jump events. No coordinate amplification, smoothing, gain changes or new experiment. Fast overview aliases rapid oscillations; slow motion retains the saved sampling resolution.",
+  "scientific_interface": {
+    "potential": "V_q = measured -J(p_true) + B(||p_hat-o||-dstar) + Psi_q(theta_hat)",
+    "psi": "1 - <theta_ref, exp((3/2-q)*(1-<theta_ref,theta_hat>)*S)*theta_hat>",
+    "angular_weight": 1,
+    "control": "u1=sqrt(4*pi*gamma*omega/kappa)*cos(2*pi*omega*tau+kappa*V_q); u2=2*pi*sqrt(omega)",
+    "field_access": "Independent scalar signal at the true plant position; only geometry and switching use the estimated position. No field gradient is supplied to the oscillatory control.",
+    "reference": "A source-aligned reference direction is specified a priori per configuration.",
+    "scaling": "physical position [m] = L * position [workspace units], L=0.5; t_seconds=T*tau, T=80.",
+    "oscillator_hz_in_recorded_seconds": 20.0,
+    "heading_revolutions_per_recorded_second": 0.5,
+    "heading": "heading0 + 2*pi*sqrt(omega)*t_seconds/T; recover from the controller clock, never from the path tangent.",
+    "no_shift": "The selected records use field_offset=0 and directly apply the original additive potential; no extra J-star phase shift is inserted.",
+    "arrival": "0.125 m source neighborhood held for 8 s, horizon 3200 s; preserve original terminal samples."
+  },
+  "visual_style": {
+    "reference": "The first interactive experimental-setup scene",
+    "assets": [
+      "static/scene-realism/terrain.webp",
+      "static/scene-realism/rock-views.webp",
+      "static/scene-realism/rover-views.webp",
+      "static/scene-realism/camera-drone-author.webp"
+    ],
+    "true_position": "red",
+    "estimated_position": "dashed white",
+    "disclosure": "Illustrative terrain/rock/rover artwork and author-supplied drone. These are rendering overlays, not new camera observations or a new perception evaluation. The displayed nonholonomic heading follows the recorded controller clock, not the path tangent."
+  },
+  "overview_playback_speed": 32,
+  "playback_segments": [
+    {
+      "video_start_s": 0,
+      "video_end_s": 4,
+      "type": "initial-condition and initial-switch holds"
+    },
+    {
+      "video_start_s": 4,
+      "video_end_s": 7.125,
+      "recorded_start_s": 0,
+      "recorded_end_s": 100,
+      "speed": 32
+    },
+    {
+      "video_start_s": 7.125,
+      "video_end_s": 23.125,
+      "recorded_start_s": 100,
+      "recorded_end_s": 102,
+      "speed": 0.125
+    },
+    {
+      "video_start_s": 23.125,
+      "recorded_start_s": 102,
+      "recorded_end_s": 875.8999999999994,
+      "speed": 32
+    }
+  ],
+  "local_detail": {
+    "span_workspace_units": 0.1,
+    "trail_history_recorded_s": 0.6,
+    "pixel_size": 356,
+    "magnification_relative_to_overhead": 80.4,
+    "heading_arrow": "Same controller-derived heading as the 3D vehicle; arrow length is a display annotation."
+  },
+  "verified_stream": {
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "width": 1920,
+    "height": 1080,
+    "fps": "24/1",
+    "duration_s": 50.375
+  }
+}

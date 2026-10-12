@@ -1,0 +1,76 @@
+{
+  "source": "Figures supplied by the authors in this conversation",
+  "figures": [
+    {
+      "id": "framework",
+      "original_filename": "pipeline_new (1).pdf",
+      "sha256": "31434c3bd3a2a828597eeb0b781e6f83f924928aa9d571273841d486ef9606d1",
+      "pdf": "static/paper/framework.pdf",
+      "web_image": "static/paper/framework.webp",
+      "width": 2400,
+      "height": 885
+    },
+    {
+      "id": "cap-architecture",
+      "original_filename": "11new_final.pdf",
+      "sha256": "8a974ec10ef93984fdf3c6184dbbff21c8de67867c389277c2376c9b6c75a594",
+      "pdf": "static/paper/cap-architecture.pdf",
+      "web_image": "static/paper/cap-architecture.webp",
+      "width": 2400,
+      "height": 821
+    },
+    {
+      "id": "holonomic-loop",
+      "original_filename": "111holo_pipeline.pdf",
+      "sha256": "93cb055db57155a2374c1dbdc9da71f475cbd5a9f5c9f39e334968b9ae571c6a",
+      "pdf": "static/paper/holonomic-loop.pdf",
+      "web_image": "static/paper/holonomic-loop.webp",
+      "width": 2400,
+      "height": 693
+    },
+    {
+      "id": "nonholonomic-loop",
+      "original_filename": "111nonholo_pipeline.pdf",
+      "sha256": "22d9520b292c6b3ac654db970cd6de045eac32699fe05e59c38e30788d227cdd",
+      "pdf": "static/paper/nonholonomic-loop.pdf",
+      "web_image": "static/paper/nonholonomic-loop.webp",
+      "width": 2400,
+      "height": 823
+    },
+    {
+      "id": "nonholonomic-geometry",
+      "original_filename": "1unicycle (1).pdf",
+      "sha256": "7d3d351503052dfcabbd80673296d03439cb8cf6e281881545fb9f82ceed84b1",
+      "pdf": "static/paper/nonholonomic-geometry.pdf",
+      "web_image": "static/paper/nonholonomic-geometry.webp",
+      "width": 2400,
+      "height": 1523
+    },
+    {
+      "id": "nonholonomic-trajectories",
+      "original_filename": "exp1 (4).pdf",
+      "sha256": "c6e562c2e8b8e356cc00e26d7850d0f37936f1c6e89179fb5edabc3f09be9431",
+      "pdf": "static/paper/nonholonomic-trajectories.pdf",
+      "web_image": "static/paper/nonholonomic-trajectories.webp",
+      "width": 2400,
+      "height": 1350
+    },
+    {
+      "id": "holonomic-trajectories",
+      "original_filename": "exp2 (1).pdf",
+      "sha256": "81265a39a464a72dcc9d705040f3a1d619c21a533984547ea9bff790bbb2bc4d",
+      "pdf": "static/paper/holonomic-trajectories.pdf",
+      "web_image": "static/paper/holonomic-trajectories.webp",
+      "width": 2400,
+      "height": 1350
+    },
+    {
+      "id": "experimental-scene",
+      "original_filename": "fig_scene_1.png",
+      "sha256": "7ad6f31a4d25c2214abe806a92367065966843c89f057b3dfbe22831f8b1224e",
+      "web_image": "static/paper/experimental-scene.webp",
+      "width": 1672,
+      "height": 941
+    }
+  ]
+}

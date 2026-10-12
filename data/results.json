@@ -1,0 +1,178 @@
+{
+  "source": "paper_experiments_original_vq_20260928/data/FOCUS_AGGREGATES.json",
+  "complete": true,
+  "groups": [
+    {
+      "family": "primary",
+      "policy": "local",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 616323,
+      "full_fraction": 0.0,
+      "mean_accounted_ms": 7.890414853300183,
+      "mean_total_accounted_s": 270.1691196461404,
+      "min_clearance_m": 0.009871225313094922,
+      "median_success_arrival_s": 646.85
+    },
+    {
+      "family": "primary",
+      "policy": "always_context",
+      "planned": 18,
+      "completed": 18,
+      "success": 16,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 16,
+        "ESTIMATED_OR_PREDICTED_MODE_FAILURE": 2
+      },
+      "frames": 534125,
+      "full_fraction": 0.0,
+      "mean_accounted_ms": 8.49697305134383,
+      "mean_total_accounted_s": 252.13587394716802,
+      "min_clearance_m": 0.008774984186808943,
+      "median_success_arrival_s": 647.52
+    },
+    {
+      "family": "primary",
+      "policy": "always_full",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 616054,
+      "full_fraction": 1.0,
+      "mean_accounted_ms": 9.94580928325081,
+      "mean_total_accounted_s": 340.39753289909976,
+      "min_clearance_m": 0.015895459628182118,
+      "median_success_arrival_s": 647.46
+    },
+    {
+      "family": "primary",
+      "policy": "margin_e1",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 616117,
+      "full_fraction": 0.49851895013447123,
+      "mean_accounted_ms": 8.924250788083743,
+      "mean_total_accounted_s": 305.4657012667662,
+      "min_clearance_m": 0.015895459628182118,
+      "median_success_arrival_s": 646.85
+    },
+    {
+      "family": "matched_ablation",
+      "policy": "e1_no_phase",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 616237,
+      "full_fraction": 0.47179575390637046,
+      "mean_accounted_ms": 8.87508891872507,
+      "mean_total_accounted_s": 303.8421205560211,
+      "min_clearance_m": 0.015895459628182118,
+      "median_success_arrival_s": 646.85
+    },
+    {
+      "family": "matched_ablation",
+      "policy": "e1_no_switch",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 616250,
+      "full_fraction": 0.12000649087221095,
+      "mean_accounted_ms": 8.15231147615344,
+      "mean_total_accounted_s": 279.1034415099755,
+      "min_clearance_m": 0.015895459628182118,
+      "median_success_arrival_s": 646.85
+    },
+    {
+      "family": "matched_ablation",
+      "policy": "e1_domain",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 616131,
+      "full_fraction": 0.00599710126580224,
+      "mean_accounted_ms": 7.9148644612609225,
+      "mean_total_accounted_s": 270.92185307673077,
+      "min_clearance_m": 0.015895459628182118,
+      "median_success_arrival_s": 646.85
+    },
+    {
+      "family": "heldout",
+      "policy": "local",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 644790,
+      "full_fraction": 0.0,
+      "mean_accounted_ms": 7.885504880741213,
+      "mean_total_accounted_s": 282.47192733628486,
+      "min_clearance_m": 0.04196298393037051,
+      "median_success_arrival_s": 713.4300000000001
+    },
+    {
+      "family": "heldout",
+      "policy": "always_full",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 645117,
+      "full_fraction": 1.0,
+      "mean_accounted_ms": 9.943995875562667,
+      "mean_total_accounted_s": 356.3911548475201,
+      "min_clearance_m": 0.059031885357763436,
+      "median_success_arrival_s": 712.8000000000001
+    },
+    {
+      "family": "heldout",
+      "policy": "margin_e1",
+      "planned": 18,
+      "completed": 18,
+      "success": 18,
+      "complete": true,
+      "terminations": {
+        "SOURCE_REACHED": 18
+      },
+      "frames": 645082,
+      "full_fraction": 0.5204408121758164,
+      "mean_accounted_ms": 8.97462912417195,
+      "mean_total_accounted_s": 321.6317613710605,
+      "min_clearance_m": 0.059031885357763436,
+      "median_success_arrival_s": 712.8000000000001
+    }
+  ],
+  "cost_definition": "Fixed reference module costs plus measured routing overhead; excludes rendering; not wall-clock end-to-end latency."
+}

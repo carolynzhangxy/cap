@@ -1,0 +1,183 @@
+{
+  "id": "paper-holonomic",
+  "title": "Holonomic vehicle \u2014 growing recorded trajectory",
+  "kind": "recorded_trajectory_replay",
+  "duration_s": 30,
+  "fps": 24,
+  "playback_speed": 0.25,
+  "recorded_excerpt_s": [
+    0,
+    6.5
+  ],
+  "video_sha256": "0a65638424e43b4fd76951c9e06389998e18c7901ac240d72dd0366af4b5a13b",
+  "trace_source": "experiments/results/holonomic_paper_learned/hybrid_single_p0.01/trial_0024.npz",
+  "trace_sha256": "e3353c2018deb62c075ead48c70f5917ad9c412663fc8ac18f02678cd0907910",
+  "trial": 24,
+  "selection": "Fixed single-expert run whose initial position is closest to (0,-3) among 50 archived cases; lowest trial index breaks ties.",
+  "original_trial_metadata": {
+    "controller": "hybrid",
+    "routing_mode": "single",
+    "fixed_q": null,
+    "jumps_total": 1,
+    "init_x": -0.005102000000000118,
+    "init_y": -3.0,
+    "perception_period": 0.01,
+    "params": {
+      "p_star": [
+        0.0,
+        2.0
+      ],
+      "obstacle_radius": 0.55,
+      "p0": [
+        0.0,
+        0.0
+      ],
+      "rho": 0.65,
+      "rho_b": 0.6,
+      "c": 0.6,
+      "a": 0.15,
+      "omega": 125.66370614359172,
+      "k": 0.7,
+      "delta": 0.15,
+      "dt": 5e-05,
+      "horizon": 10.0,
+      "arrival_tol": 0.25,
+      "log_every": 100
+    },
+    "trial_seed": 24,
+    "checkpoint": "MOE/output/cascade_s2_router.pth"
+  },
+  "backgrounds": [
+    "grass.png",
+    "crack.png"
+  ],
+  "rendering": "At each completed image update, append the paired original ground-truth and visual-observation coordinates. Connect successive pairs without interpolating a future endpoint. Initial car icons remain fixed. Both backgrounds replay the same observation pairs. The original higher-rate ground truth and held controller estimates are included in the download.",
+  "sampling_s": {
+    "true": 0.009999999999999787,
+    "estimate": 0.009999999999999787
+  },
+  "heading": "No rotation. Initial-position icons are schematic and do not depict the evolving heading.",
+  "scope": "Historical single-expert trial, not a CAP evaluation or the exact run in the supplied static PDF. This view compares paired positions at image updates, not the held controller estimate between updates. The original full trace is preserved. The excerpt does not replace a full-run result or certify the current paper dwell criterion.",
+  "scene": {
+    "background": "Illustrative overlay, not inference camera frames",
+    "source": [
+      0.0,
+      2.0
+    ],
+    "obstacle": [
+      0.0,
+      0.0
+    ],
+    "coordinate_units": "original workspace units"
+  },
+  "motion_checks": {
+    "start_has_no_path_segments": true,
+    "prefix_counts": [
+      1,
+      26,
+      101,
+      201,
+      351,
+      526,
+      651
+    ],
+    "trajectory_endpoints": [
+      [
+        -0.005102000000000118,
+        -3.0
+      ],
+      [
+        1.0433535188101415,
+        -1.728765272201155
+      ],
+      [
+        1.2222900536981138,
+        -0.165957784447315
+      ],
+      [
+        1.2464437872152612,
+        0.5564774935880785
+      ],
+      [
+        0.6283512582401246,
+        1.160458142500964
+      ],
+      [
+        0.26703128307323554,
+        1.547928196432512
+      ],
+      [
+        0.153537323182993,
+        1.724110242772484
+      ]
+    ],
+    "fixed_car_poses": [
+      [
+        -0.005102000000000118,
+        -3.0,
+        0.0
+      ],
+      [
+        -0.005102000000000118,
+        -3.0,
+        0.0
+      ],
+      [
+        -0.005102000000000118,
+        -3.0,
+        0.0
+      ],
+      [
+        -0.005102000000000118,
+        -3.0,
+        0.0
+      ],
+      [
+        -0.005102000000000118,
+        -3.0,
+        0.0
+      ],
+      [
+        -0.005102000000000118,
+        -3.0,
+        0.0
+      ],
+      [
+        -0.005102000000000118,
+        -3.0,
+        0.0
+      ]
+    ],
+    "car_stays_at_initial_position": true,
+    "car_does_not_rotate": true,
+    "real_recorded_samples_preserved": true,
+    "no_future_path_samples": true,
+    "paired_camera_timestamps": true,
+    "all_image_updates_included": true,
+    "coordinates_unchanged": true,
+    "no_future_endpoint_interpolation": true,
+    "archive_hold_behavior_verified": true
+  },
+  "comparison": {
+    "basis": "Paired ground truth and visual observations at every recorded image update; connecting segments join only completed updates.",
+    "camera_period_s": 0.01,
+    "raw_logging_period_s": 0.004999999999999893,
+    "displayed_sample_count": 651,
+    "raw_excerpt_sample_count": 1301,
+    "error_units": "workspace units",
+    "image_update_error": {
+      "mean": 0.011995330936676494,
+      "median": 0.01177660946540811,
+      "p95": 0.021765718283230654,
+      "max": 0.02934622027274357
+    },
+    "controller_held_error": {
+      "mean": 0.06532136755920569,
+      "median": 0.02934622027274357,
+      "p95": 0.16287859815684777,
+      "max": 0.5257110772649604
+    },
+    "coordinates_modified": false,
+    "inter_update_values": "The original zero-order-held controller estimate is retained in original-run.npz and controller-held.csv; it is not presented as a fresh camera observation."
+  }
+}
