@@ -36,3 +36,5 @@
 
 /* The wider quadcopter silhouette remains legible in the scene legend. */
 .scene-legend .scene-legend-camera{padding:0;width:100%;}
+
+.scene-trail-controls{display:flex;align-items:center;flex-wrap:wrap;gap:10px 14px;margin:0 34px 20px;font-size:11px;color:#64775c}.scene-trail-controls[hidden]{display:none}.scene-trail-controls>div{display:flex;gap:3px;background:#f1f5ed;border:1px solid #e1e8da;border-radius:8px;padding:3px}.scene-trail-controls button{border:0;border-radius:5px;padding:7px 10px;font:inherit;cursor:pointer;background:transparent;color:#607957}.scene-trail-controls button[aria-pressed=true]{background:#365d46;color:white}.scene-trail-controls p{margin:0;font-size:10px;color:#7a8d70;line-height:1.6}@media(max-width:800px){.scene-trail-controls{margin-left:24px;margin-right:24px}}@media(max-width:550px){.scene-trail-controls{margin-left:18px;margin-right:18px}.scene-trail-controls p{flex-basis:100%}}

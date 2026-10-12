@@ -6,7 +6,7 @@
   const initial={vehicle:[1.8,-.9],source:[-1.8,.9],obstacle:[0,0]};
   let positions=structuredClone(initial),height=4.2,view=matchMedia('(max-width:550px)').matches?'top':'perspective',selected='vehicle',drag=null,model='nonholonomic';
   const radius=.62,bodyRadius=.2;
-  let startPosition=initial.vehicle.slice(),run=null,worker=null,playTime=0,playing=false,lastFrame=0,raf=0,rerunTimer=0,trailLengths=[],runNumber=0;
+  let startPosition=initial.vehicle.slice(),run=null,worker=null,playTime=0,playing=false,lastFrame=0,raf=0,rerunTimer=0,trailLengths=[],trailIndices=[],trailStyle='sampled',runNumber=0;
   // The terrain and overview scale are fixed; a future trajectory never changes them.
   const frameRadius=3;
   const cameraCenter=[0,0];
@@ -192,7 +192,7 @@
   }$('lab-frustum-layer').innerHTML=s;}
   function drawPreview(){const half=cameraHalfExtent(),cx=127,cy=124,sx=96/half,sy=sx;const pos=p=>[cx+(p[0]-cameraCenter[0])*sx,cy-(p[1]-cameraCenter[1])*sy];let s=`<rect x="20" y="17" width="214" height="214" rx="12" fill="#fff" stroke="#e5ebdf"/><rect x="31" y="28" width="192" height="192" rx="6" fill="#edf2e7"/><g clip-path="url(#lab-preview-clip)">`;
     const corner=pos([-frameRadius,frameRadius]);s+=`<image href="${assetRoot}terrain.webp" x="${corner[0]}" y="${corner[1]}" width="${frameRadius*2*sx}" height="${frameRadius*2*sy}" preserveAspectRatio="none"/>`;
-    if(run){const visible=[];for(let i=0;i<=sampleIndex()*5;i+=10)visible.push(pos([run.points[i+1],run.points[i+2]]));s+=`<polyline points="${pts(visible)}" fill="none" stroke="#e6ffff" stroke-width="1.6"/><polyline points="${pts(visible)}" fill="none" stroke="#05a7b5" stroke-width=".65"/>`;}
+    if(run){const current=sampleIndex(),visible=[];for(const index of trailIndices){if(index>current)break;visible.push(pos([run.points[index*5+1],run.points[index*5+2]]));}visible.push(pos(positions.vehicle));s+=`<polyline points="${pts(visible)}" fill="none" stroke="#e6ffff" stroke-width="1.6" stroke-linejoin="miter"/><polyline points="${pts(visible)}" fill="none" stroke="#05a7b5" stroke-width=".65" stroke-linejoin="miter"/>`;}
     const o=pos(positions.obstacle);s+=sprite('rock','top',o[0]-radius*sx,o[1]-radius*sy,2*radius*sx,2*radius*sy);
     const sr=pos(positions.source);s+=circle(sr,5,'#dd5c3b','stroke="#fff" stroke-width="1"');s+=roverOnPlane(positions.vehicle,vehicleHeading(),(x,y)=>pos([x,y]));
     s+=`</g>`;
@@ -292,20 +292,46 @@
   }
   function buildTrail(){
     let s=polygon(ring(positions.source,.35),'#efab3822','#ffd37b','stroke-width="1.2" stroke-dasharray="3 5"');
+    trailIndices=[];trailLengths=[];
     if(run){
-      let length=0,previous=null;const points=[];trailLengths=[];
-      for(let i=0;i<run.points.length;i+=5){const p=project(run.points[i+1],run.points[i+2]);if(previous)length+=Math.hypot(p[0]-previous[0],p[1]-previous[1]);points.push(p);trailLengths.push(length);previous=p;}
-      const poly=pts(points),offset=length-(trailLengths[sampleIndex()]||0);
+      const sampled=model==='holonomic'&&trailStyle==='sampled',interval=sampled?2*Math.PI/(10*run.config.omega):0,count=run.points.length/5;
+      // Display actual integrated samples at about ten points per oscillator turn.
+      // The full numerical record still drives position, heading, q and arrival.
+      // Retain samples around mode transitions and the exact terminal sample.
+      let bucket=-1;
+      for(let index=0;index<count;index++){
+        const i=index*5,b=sampled?Math.floor((run.points[i]+1e-12)/interval):index;
+        const modeEdge=(index>0&&run.points[i+3]!==run.points[i-2])||(index<count-1&&run.points[i+3]!==run.points[i+8]);
+        if(!sampled||b>bucket||modeEdge||index===count-1){trailIndices.push(index);bucket=b;}
+      }
+      let length=0,previous=null;const points=[];
+      for(const index of trailIndices){const i=index*5,p=project(run.points[i+1],run.points[i+2]);if(previous)length+=Math.hypot(p[0]-previous[0],p[1]-previous[1]);points.push(p);trailLengths.push(length);previous=p;}
+      const poly=pts(points),join=sampled?'miter':'round';
       const strokes=model==='holonomic'?[['#173c4544',3.6],['#ffffff',2.3],['#05a7b5',1.1]]:[['#173c4566',6],['#ffffff',4],['#05a7b5',1.8]];
-      for(const [color,width] of strokes)s+=`<polyline class="scene-trail" points="${poly}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="${length} ${length}" stroke-dashoffset="${offset}"/>`;
+      for(const [color,width] of strokes){
+        s+=`<polyline class="scene-trail" points="${poly}" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="${join}" stroke-dasharray="${length} ${length}"/>`;
+        s+=`<polyline class="scene-trail-tip" fill="none" stroke="${color}" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="${join}"/>`;
+      }
       const start=project(...startPosition);s+=circle(start,7,'#fff','stroke="#7b9ca0" stroke-width="2"');
     }
     $('lab-trail-layer').innerHTML=s;
+    root.dataset.trailStyle=model==='holonomic'?trailStyle:'fine';root.dataset.trailVertices=trailIndices.length;
+    updateTrail();
+  }
+  function updateTrail(){
+    if(!run||!trailIndices.length)return;
+    const index=sampleIndex();let low=0,high=trailIndices.length-1;
+    while(low<high){const mid=Math.ceil((low+high)/2);if(trailIndices[mid]<=index)low=mid;else high=mid-1;}
+    const offset=trailLengths.at(-1)-trailLengths[low],i=trailIndices[low]*5,j=index*5;
+    document.querySelectorAll('.scene-trail').forEach(p=>p.setAttribute('stroke-dashoffset',offset));
+    // Complete only the current, unfinished segment to the actual vehicle.
+    const tip=pts([project(run.points[i+1],run.points[i+2]),project(run.points[j+1],run.points[j+2])]);
+    document.querySelectorAll('.scene-trail-tip').forEach(p=>p.setAttribute('points',tip));
   }
   function seek(t){
     if(!run)return;playTime=run.duration-t<1e-9?run.duration:clamp(t,0,run.duration);const i=sampleIndex()*5;
     positions.vehicle=[run.points[i+1],run.points[i+2]];$('scene-time').value=playTime;$('scene-time-value').textContent=playTime.toFixed(2)+' s';$('scene-mode').textContent=run.points[i+3];
-    const offset=trailLengths.at(-1)-(trailLengths[i/5]||0);document.querySelectorAll('.scene-trail').forEach(p=>p.setAttribute('stroke-dashoffset',offset));
+    updateTrail();
     if(reacquireVehicle()){drawFrustum();drawCamera();}
     drawVehicle();drawPreview();const active=document.activeElement;
     ['vehicle','obstacle','source'].sort((a,b)=>project(...positions[a])[1]-project(...positions[b])[1]).forEach(k=>$('lab-actors').append(actors[k]));$('lab-actors').append(actors.camera);if(active?.matches('#setup-canvas [data-object]'))active.focus({preventScroll:true});
@@ -324,6 +350,7 @@
     model=b.dataset.sceneModel;
     document.querySelectorAll('[data-scene-model]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.sceneModel===model)));
     document.querySelectorAll('[data-model-details]').forEach(panel=>panel.hidden=panel.dataset.modelDetails!==model);
+    $('scene-trail-controls').hidden=model!=='holonomic';
     CAPMath.text($('scene-model-copy'),model==='holonomic'?'Planar velocity input · oscillatory hybrid extremum seeking':String.raw`Translation along \(\psi\) · heading rotation governed by \(u_2\)`);
     $('scene-vehicle-description').textContent=model==='holonomic'?'Holonomic robot':'Nonholonomic robot';
     runSimulation();
@@ -331,6 +358,12 @@
   $('scene-run').addEventListener('click',runSimulation);
   $('scene-pause').addEventListener('click',()=>playing?pause():resume());
   $('scene-time').addEventListener('input',e=>{pause();seek(+e.target.value);});
+  document.querySelectorAll('[data-trail-style]').forEach(b=>b.addEventListener('click',()=>{
+    trailStyle=b.dataset.trailStyle;
+    document.querySelectorAll('[data-trail-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.trailStyle===trailStyle)));
+    $('scene-trail-description').textContent=trailStyle==='sampled'?'About 10 computed points per loop, joined by straight segments.':'All computed trajectory samples, shown at full detail.';
+    buildTrail();drawPreview();
+  }));
   document.querySelectorAll('[data-scene-preset]').forEach(b=>b.addEventListener('click',()=>{
     clearRun();positions=b.dataset.scenePreset==='cross'?{vehicle:[0,-2.5],source:[0,2.3],obstacle:[0,0]}:{vehicle:[-2.2,1.8],source:[2.2,-1.7],obstacle:[.15,-.15]};startPosition=positions.vehicle.slice();selected='vehicle';root.dataset.interacted='true';runSimulation();
   }));
