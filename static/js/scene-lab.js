@@ -7,11 +7,9 @@
   let positions=structuredClone(initial),height=4.2,view=matchMedia('(max-width:550px)').matches?'top':'perspective',selected='vehicle',drag=null,model='nonholonomic';
   const radius=.62,bodyRadius=.2;
   let startPosition=initial.vehicle.slice(),run=null,worker=null,playTime=0,playing=false,lastFrame=0,raf=0,rerunTimer=0,trailLengths=[],trailIndices=[],trailStyle='sampled',runNumber=0;
-  let trajectoryExtents=new Float64Array(0);
-  // Extend the displayed ground as the observed footprint grows. Never inspect
-  // future trajectory samples to move the camera or enlarge its view.
-  const initialFrameRadius=3;
-  let frameRadius=initialFrameRadius;
+  // Keep the original ground and overview scale. Placement limits apply only
+  // before a run; integrated robot positions are never clamped or rescaled.
+  const frameRadius=3,startLimit=1.8;
   const cameraCenter=[0,0];
   let cameraViewScale=1,cameraReframes=0;
   const workerURL=new URL('scene-worker.js?v=7',document.currentScript.src);
@@ -26,7 +24,7 @@
   // Full-resolution scene assets are cached once; each object stays independently draggable.
   for(const file of ['terrain.webp',...Object.values(artwork).map(a=>a.file)]){const img=new Image();img.src=assetRoot+file;}
 
-  const descriptions={vehicle:['Move the robot','Drag the blue robot to choose a new starting point. Release to run; arrow keys work too.'],source:['Place the signal source','Place the source anywhere in the free space. Release it to integrate a new closed-loop trajectory.'],obstacle:['Place the obstacle','Reposition the rock. Release it to see the controller navigate the new layout.'],camera:['Adjust the camera drone','The drone stays directly above the workspace center, looking straight down. Its view widens when the robot leaves the image; the terrain extends with it. Drag vertically to adjust its height.']};
+  const descriptions={vehicle:['Choose an interior starting point','Drag the robot inside the dashed inner square, keeping clear of the rock. The outer margin leaves room for exploration. Release to run; arrow keys work too.'],source:['Place the signal source','Place the source anywhere in the free space. Release it to integrate a new closed-loop trajectory.'],obstacle:['Place the obstacle','Reposition the rock. Release it to see the controller navigate the new layout.'],camera:['Adjust the camera drone','The drone stays directly above the workspace center, looking straight down. Its view widens within the fixed terrain when the robot leaves the image. Drag vertically to adjust its height.']};
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const compact=()=>canvas.clientWidth<550;
   const project=(wx,wy,z=0)=>{const x=wx*3/frameRadius,y=wy*3/frameRadius;return view==='top'?(compact()?[550+x*145,465-y*110]:[620+x*87,340-y*87]):[570+(x-y)*76,370+(x+y)*38-z*70*3/frameRadius];};
@@ -37,7 +35,7 @@
   const circle=(p,r,fill,extra='')=>`<circle cx="${p[0]}" cy="${p[1]}" r="${r}" fill="${fill}" ${extra}/>`;
   const ring=(pos,r,z=0,n=72)=>Array.from({length:n},(_,i)=>{const t=i/n*2*Math.PI;return project(pos[0]+r*Math.cos(t),pos[1]+r*Math.sin(t),z);});
   const floor=()=>[[-1,-1],[1,-1],[1,1],[-1,1]].map(p=>project(p[0]*frameRadius,p[1]*frameRadius));
-  canvas.innerHTML=`<defs><filter id="lab-rover-shadow" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="3"/></filter><filter id="lab-ground-shadow" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur stdDeviation="12"/></filter><linearGradient id="lab-soil-edge" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8d7050"/><stop offset="1" stop-color="#473c2b"/></linearGradient><linearGradient id="lab-ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f1f4e9"/><stop offset="1" stop-color="#e4ebd8"/></linearGradient><linearGradient id="lab-cone" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#aecbd3" stop-opacity=".14"/><stop offset="1" stop-color="#a7c7ca" stop-opacity=".02"/></linearGradient><radialGradient id="lab-glow"><stop stop-color="#d18a52" stop-opacity=".21"/><stop offset="1" stop-color="#d18a52" stop-opacity="0"/></radialGradient><filter id="lab-shadow" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="9"/></filter><clipPath id="lab-floor-clip"><polygon id="lab-floor-shape"/></clipPath><clipPath id="lab-preview-clip"><rect x="31" y="28" width="192" height="192" rx="6"/></clipPath></defs><g id="lab-ground-layer"></g><g id="lab-field-layer" clip-path="url(#lab-floor-clip)" pointer-events="none"></g><g id="lab-frustum-layer" pointer-events="none"></g><g id="lab-trail-layer" pointer-events="none"></g><g id="lab-actors"></g><g id="lab-preview" pointer-events="none"></g>`;
+  canvas.innerHTML=`<defs><filter id="lab-rover-shadow" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="3"/></filter><filter id="lab-ground-shadow" x="-20%" y="-20%" width="140%" height="150%"><feGaussianBlur stdDeviation="12"/></filter><linearGradient id="lab-soil-edge" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8d7050"/><stop offset="1" stop-color="#473c2b"/></linearGradient><linearGradient id="lab-ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f1f4e9"/><stop offset="1" stop-color="#e4ebd8"/></linearGradient><linearGradient id="lab-cone" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#aecbd3" stop-opacity=".14"/><stop offset="1" stop-color="#a7c7ca" stop-opacity=".02"/></linearGradient><radialGradient id="lab-glow"><stop stop-color="#d18a52" stop-opacity=".21"/><stop offset="1" stop-color="#d18a52" stop-opacity="0"/></radialGradient><filter id="lab-shadow" x="-50%" y="-100%" width="200%" height="300%"><feGaussianBlur stdDeviation="9"/></filter><clipPath id="lab-floor-clip"><polygon id="lab-floor-shape"/></clipPath><clipPath id="lab-preview-clip"><rect x="31" y="28" width="192" height="192" rx="6"/></clipPath></defs><g id="lab-ground-layer"></g><g id="lab-field-layer" clip-path="url(#lab-floor-clip)" pointer-events="none"></g><g id="lab-start-area" pointer-events="none"></g><g id="lab-frustum-layer" pointer-events="none"></g><g id="lab-trail-layer" pointer-events="none"></g><g id="lab-actors"></g><g id="lab-preview" pointer-events="none"></g>`;
   const actors={};
   ['source','obstacle','vehicle','camera'].forEach(k=>{const g=document.createElementNS(NS,'g');g.dataset.object=k;g.setAttribute('role','button');g.setAttribute('tabindex','0');g.setAttribute('aria-label',`${k==='camera'?'Drone with downward-facing overhead camera':k==='vehicle'?'Robot':k}. Use arrow keys to ${k==='camera'?'adjust height':'move'}.`);$('lab-actors').append(g);actors[k]=g;});
   function vehicleHeading(){return run?run.config.heading+(model==='nonholonomic'?2*Math.PI*Math.sqrt(run.config.omega)*run.points[sampleIndex()*5]:0):Math.PI/2;}
@@ -160,46 +158,31 @@
     actors.camera.dataset.worldPosition=`${cameraCenter[0]},${cameraCenter[1]},${height}`;actors.camera.dataset.lookDirection='0,0,-1';
   }
   function hitArea(k,p,r=35){const size=Math.max(r,24*1100/Math.max(300,canvas.clientWidth));return circle(p,size,'transparent','class="scene-hit"')+circle(p,size,'none',`class="scene-focus-ring" stroke="${colors[k]}" opacity="0" pointer-events="none"`);}
-  function terrainSurface(projection){
-    // Preserve the original [-3,3]^2 texture in world coordinates. Mirror its
-    // edges to extend it, rather than stretching the original photograph.
-    // Both the 3D overview and square camera image use this same mapping.
-    const size=initialFrameRadius*2,o=projection(-initialFrameRadius,initialFrameRadius),u=projection(initialFrameRadius,initialFrameRadius),v=projection(-initialFrameRadius,-initialFrameRadius);
-    const count=Math.ceil((frameRadius-initialFrameRadius)/size);
-    let s=`<g class="scene-terrain-surface" transform="matrix(${(u[0]-o[0])/size} ${(u[1]-o[1])/size} ${(v[0]-o[0])/size} ${(v[1]-o[1])/size} ${o[0]} ${o[1]})">`;
-    for(let row=-count;row<=count;row++)for(let col=-count;col<=count;col++){
-      const flipX=Math.abs(col)%2,flipY=Math.abs(row)%2;
-      s+=`<image href="${assetRoot}terrain.webp" width="${size}" height="${size}" preserveAspectRatio="none" transform="translate(${(col+flipX)*size} ${(row+flipY)*size}) scale(${flipX?-1:1} ${flipY?-1:1})"/>`;
-    }
-    return s+'</g>';
-  }
   function drawGround(){
     const f=floor();$('lab-floor-shape').setAttribute('points',pts(f));
     let s=polygon(f,'#17271e33','none','filter="url(#lab-ground-shadow)" transform="translate(0 13)"');
     if(view==='perspective'){
       s+=polygon([f[1],f[2],f[3],...[f[3],f[2],f[1]].map(([x,y])=>[x,y+13])],'url(#lab-soil-edge)');
     }
-    s+=`<g clip-path="url(#lab-floor-clip)">${terrainSurface(project)}</g>`;
+    // Affine map of the terrain onto the same ground plane used by the trajectories.
+    const o=f[3],u=[f[2][0]-o[0],f[2][1]-o[1]],v=[f[0][0]-o[0],f[0][1]-o[1]];
+    s+=`<image href="${assetRoot}terrain.webp" width="1" height="1" preserveAspectRatio="none" transform="matrix(${u[0]} ${u[1]} ${v[0]} ${v[1]} ${o[0]} ${o[1]})"/>`;
     s+=polygon(f,'none','#896d4740','stroke-width="1"');$('lab-ground-layer').innerHTML=s;
   }
   function drawField(){let s='';if($('scene-field').checked){const p=positions.source;for(let i=1;i<=6;i++)s+=polygon(ring(p,i*.55),'none','#fff2c7',`stroke-width="${i===1?1.6:1}" stroke-opacity="${.48-i*.05}"`);} $('lab-field-layer').innerHTML=s;}
-  const cameraHalfExtent=()=>height*.64*cameraViewScale;
-  function expandTerrain(){
-    // Include the entire observed square and the robot body, not just its center.
-    // The retained radius also keeps previously drawn trail samples on the soil.
-    const visibleTrailExtent=run?trajectoryExtents[sampleIndex()]||0:0;
-    const extent=Math.max(cameraHalfExtent()+.3,visibleTrailExtent+.6,...positions.vehicle.map(p=>Math.abs(p)+.6));
-    if(extent<=frameRadius+1e-9)return false;
-    frameRadius=Math.ceil(extent*2)/2;
-    return true;
+  function drawStartArea(){
+    const visible=!run&&selected==='vehicle';
+    const corners=[[-1,-1],[1,-1],[1,1],[-1,1]].map(([x,y])=>project(x*startLimit,y*startLimit));
+    $('lab-start-area').innerHTML=visible?polygon(corners,'#daf5e508','#184d4dcc','stroke-width="3" stroke-dasharray="7 7"')+polygon(corners,'none','#e2fff2','stroke-width="1.4" stroke-dasharray="7 7"'):'';
   }
+  const cameraHalfExtent=()=>height*.64*cameraViewScale;
   const vehicleInCamera=()=>positions.vehicle.every((p,i)=>Math.abs(p-cameraCenter[i])<=cameraHalfExtent()+1e-9);
   function reacquireVehicle(){
     if(vehicleInCamera())return false;
     // Keep the drone centered overhead: widen the lens field instead of translating it.
     // Retain the wider view, with margin, until the user resets the scene.
     const extent=Math.max(...positions.vehicle.map((p,i)=>Math.abs(p-cameraCenter[i])));
-    cameraViewScale=Math.max(cameraViewScale,extent/(height*.64*.82));
+    cameraViewScale=Math.min(frameRadius/(height*.64),Math.max(cameraViewScale,extent/(height*.64*.82)));
     cameraReframes++;
     return true;
   }
@@ -214,14 +197,14 @@
     }
   }$('lab-frustum-layer').innerHTML=s;}
   function drawPreview(){const half=cameraHalfExtent(),cx=127,cy=124,sx=96/half,sy=sx;const pos=p=>[cx+(p[0]-cameraCenter[0])*sx,cy-(p[1]-cameraCenter[1])*sy];let s=`<rect x="20" y="17" width="214" height="214" rx="12" fill="#fff" stroke="#e5ebdf"/><rect x="31" y="28" width="192" height="192" rx="6" fill="#edf2e7"/><g clip-path="url(#lab-preview-clip)">`;
-    s+=terrainSurface((x,y)=>pos([x,y]));
+    const corner=pos([-frameRadius,frameRadius]);s+=`<image href="${assetRoot}terrain.webp" x="${corner[0]}" y="${corner[1]}" width="${frameRadius*2*sx}" height="${frameRadius*2*sy}" preserveAspectRatio="none"/>`;
     if(run){const current=sampleIndex(),visible=[];for(const index of trailIndices){if(index>current)break;visible.push(pos([run.points[index*5+1],run.points[index*5+2]]));}visible.push(pos(positions.vehicle));s+=`<polyline points="${pts(visible)}" fill="none" stroke="#e6ffff" stroke-width="1.6" stroke-linejoin="miter"/><polyline points="${pts(visible)}" fill="none" stroke="#05a7b5" stroke-width=".65" stroke-linejoin="miter"/>`;}
     const o=pos(positions.obstacle);s+=sprite('rock','top',o[0]-radius*sx,o[1]-radius*sy,2*radius*sx,2*radius*sy);
     const sr=pos(positions.source);s+=circle(sr,5,'#dd5c3b','stroke="#fff" stroke-width="1"');s+=roverOnPlane(positions.vehicle,vehicleHeading(),(x,y)=>pos([x,y]));
     s+=`</g>`;
     $('lab-preview').innerHTML=s;$('lab-preview').style.display=canvas.clientWidth<550?'none':'';
   }
-  function render(){expandTerrain();const active=document.activeElement;canvas.setAttribute('viewBox',view==='perspective'?'0 -90 1100 740':compact()?'0 0 1100 850':'0 0 1100 650');drawGround();drawField();drawFrustum();buildTrail();drawObstacle();drawSource();drawVehicle();drawCamera();drawPreview();
+  function render(){cameraViewScale=Math.min(cameraViewScale,frameRadius/(height*.64));const active=document.activeElement;canvas.setAttribute('viewBox',view==='perspective'?'0 -90 1100 740':compact()?'0 0 1100 850':'0 0 1100 650');drawGround();drawField();drawStartArea();drawFrustum();buildTrail();drawObstacle();drawSource();drawVehicle();drawCamera();drawPreview();
     // Maintain painter order while retaining each focusable SVG object.
     const keys=['vehicle','obstacle','source'].sort((a,b)=>project(...positions[a])[1]-project(...positions[b])[1]);keys.forEach(k=>$('lab-actors').append(actors[k]));$('lab-actors').append(actors.camera);if(active?.matches('#setup-canvas [data-object]'))active.focus({preventScroll:true});
     updateReadings();
@@ -234,7 +217,7 @@
     root.dataset.model=model;root.dataset.view=view;root.dataset.selected=selected;root.dataset.height=height.toFixed(2);for(const [k,p] of Object.entries(positions)){root.dataset[k+'X']=p[0].toFixed(4);root.dataset[k+'Y']=p[1].toFixed(4);actors[k].setAttribute('aria-label',`${k==='vehicle'?'Robot':k}, position ${p[0].toFixed(2)}, ${p[1].toFixed(2)}. Use arrow keys to move.`);}
     root.dataset.cameraX=cameraCenter[0];root.dataset.cameraY=cameraCenter[1];root.dataset.cameraReframes=cameraReframes;
     root.dataset.cameraHalfExtent=cameraHalfExtent();root.dataset.cameraViewScale=cameraViewScale;
-    root.dataset.terrainHalfExtent=frameRadius;
+    root.dataset.terrainHalfExtent=frameRadius;root.dataset.startLimit=startLimit;
     updateModePanel();
   }
   function updateModePanel(){
@@ -269,10 +252,10 @@
     $('scene-mode-chart-title').textContent=`Mode history through ${t.toFixed(3)} seconds. Current mode ${q}; ${events.length} switches.`;
   }
   function select(k){selected=k;render();}
-  function move(k,p){p=p.map(n=>clamp(n,-2.55,2.55));
+  function move(k,p){const limit=k==='vehicle'?startLimit:2.55;p=p.map(n=>clamp(n,-limit,limit));
     // Placement only: reserve room for oscillations. The integrated state is never projected.
     const avoid=k==='obstacle'?['vehicle','source']:[k==='vehicle'||k==='source'?'obstacle':null].filter(Boolean);
-    for(let pass=0;pass<5;pass++)for(const other of avoid){const q=positions[other],min=(k==='vehicle'||other==='vehicle'?1.45:1.6);let dx=p[0]-q[0],dy=p[1]-q[1],d=Math.hypot(dx,dy);if(d<min){if(d<1e-8){dx=1;dy=0;d=1;}p=[q[0]+dx/d*min,q[1]+dy/d*min].map(n=>clamp(n,-2.55,2.55));}}
+    for(let pass=0;pass<5;pass++)for(const other of avoid){const q=positions[other],min=(k==='vehicle'||other==='vehicle'?1.45:1.6);let dx=p[0]-q[0],dy=p[1]-q[1],d=Math.hypot(dx,dy);if(d<min){if(d<1e-8){dx=1;dy=0;d=1;}p=[q[0]+dx/d*min,q[1]+dy/d*min].map(n=>clamp(n,-limit,limit));}}
     const valid=avoid.every(other=>Math.hypot(p[0]-positions[other][0],p[1]-positions[other][1])>=(k==='vehicle'||other==='vehicle'?1.449:1.599));
     if(valid)positions[k]=p;if(k==='vehicle')startPosition=positions.vehicle.slice();render();
   }
@@ -285,12 +268,22 @@
   document.querySelectorAll('[data-scene-view]').forEach(b=>b.addEventListener('click',()=>{view=b.dataset.sceneView;render();}));
   $('scene-height').addEventListener('input',e=>{height=+e.target.value;root.dataset.interacted='true';select('camera');});['scene-fov','scene-field'].forEach(id=>$(id).addEventListener('change',render));
   $('scene-height').addEventListener('change',()=>{if(reacquireVehicle())render();});
-  $('scene-reset').addEventListener('click',()=>{clearRun();positions=structuredClone(initial);startPosition=initial.vehicle.slice();height=4.2;cameraViewScale=1;cameraReframes=0;frameRadius=initialFrameRadius;selected='vehicle';$('scene-fov').checked=true;$('scene-field').checked=true;root.dataset.interacted='false';setStatus('Ready. Run this layout, or drag an object to start a new trajectory.');render();});
+  $('scene-reset').addEventListener('click',()=>{clearRun();positions=structuredClone(initial);startPosition=initial.vehicle.slice();height=4.2;cameraViewScale=1;cameraReframes=0;selected='vehicle';$('scene-fov').checked=true;$('scene-field').checked=true;root.dataset.interacted='false';setStatus('Ready. Run this layout, or drag an object to start a new trajectory.');render();});
 
   function setStatus(text){if($('scene-status').textContent!==text)$('scene-status').textContent=text;}
   function clearRun(){clearTimeout(rerunTimer);cancelAnimationFrame(raf);worker?.terminate();worker=null;run=null;playing=false;playTime=0;trailLengths=[];root.dataset.running='false';root.dataset.phase='ready';root.dataset.arrived='false';$('scene-pause').disabled=true;$('scene-pause').textContent='Pause';$('scene-run').disabled=false;$('scene-run').innerHTML='<span aria-hidden="true">▶</span> Run trajectory';$('scene-time').disabled=true;$('scene-time').value=0;$('scene-time-value').textContent='0.00 s';updateModePanel();}
   function beginEdit(k){if(run||worker){if(k!=='vehicle')positions.vehicle=startPosition.slice();clearRun();}else{clearTimeout(rerunTimer);}setStatus('Release to run the controller from this new layout.');}
   function scheduleRun(){clearTimeout(rerunTimer);rerunTimer=setTimeout(runSimulation,350);}
+  function fitsFixedTerrain(data){
+    // Check the full oriented body before starting this presentation. A layout
+    // that does not fit can be edited; the controller's trajectory stays intact.
+    for(let i=0;i<data.points.length;i+=5){
+      const heading=data.config.heading+(data.config.model==='nonholonomic'?2*Math.PI*Math.sqrt(data.config.omega)*data.points[i]:0);
+      const s=Math.abs(Math.sin(heading)),c=Math.abs(Math.cos(heading));
+      if(Math.abs(data.points[i+1])+.36*s+.43*c>frameRadius-.02||Math.abs(data.points[i+2])+.36*c+.43*s>frameRadius-.02)return false;
+    }
+    return true;
+  }
   function runSimulation(){
     positions.vehicle=startPosition.slice();clearRun();reacquireVehicle();render();
     const layout={...structuredClone(positions),model,omega:Number($('scene-frequency').value)};worker=new Worker(workerURL,{type:'module'});const task=worker;
@@ -298,11 +291,11 @@
     worker.onmessage=({data})=>{
       if(worker!==task)return;worker.terminate();worker=null;$('scene-run').disabled=false;
       if(data.error){root.dataset.phase='error';setStatus(data.error);updateModePanel();return;}
+      if(!fitsFixedTerrain(data)){
+        root.dataset.phase='layout-needed';root.dataset.result='outside-view';selected='vehicle';render();
+        setStatus('This route would leave the fixed terrain. Choose a starting point closer to the center, or move the source inward.');return;
+      }
       run=data;
-      // Prefix bounds cover only the already-visible trajectory, including when
-      // a reader scrubs forward. Future samples never drive the camera or floor.
-      trajectoryExtents=new Float64Array(run.points.length/5);
-      for(let i=0;i<trajectoryExtents.length;i++)trajectoryExtents[i]=Math.max(i?trajectoryExtents[i-1]:0,Math.abs(run.points[i*5+1]),Math.abs(run.points[i*5+2]));
       root.dataset.frequency=run.config.omega;
       if(model==='holonomic'){
         root.dataset.amplitude=run.config.a;root.dataset.frequency=run.config.omega;root.dataset.gain=run.config.k;
@@ -360,9 +353,8 @@
   function seek(t){
     if(!run)return;playTime=run.duration-t<1e-9?run.duration:clamp(t,0,run.duration);const i=sampleIndex()*5;
     positions.vehicle=[run.points[i+1],run.points[i+2]];$('scene-time').value=playTime;$('scene-time-value').textContent=playTime.toFixed(2)+' s';$('scene-mode').textContent=run.points[i+3];
-    const reframed=reacquireVehicle();
-    if(expandTerrain())render();
-    else{updateTrail();if(reframed){drawFrustum();drawCamera();}}
+    updateTrail();
+    if(reacquireVehicle()){drawFrustum();drawCamera();}
     drawVehicle();drawPreview();const active=document.activeElement;
     ['vehicle','obstacle','source'].sort((a,b)=>project(...positions[a])[1]-project(...positions[b])[1]).forEach(k=>$('lab-actors').append(actors[k]));$('lab-actors').append(actors.camera);if(active?.matches('#setup-canvas [data-object]'))active.focus({preventScroll:true});
     const reached=run.arrival!==null&&playTime>=run.arrival;
@@ -402,7 +394,7 @@
     buildTrail();drawPreview();
   }));
   document.querySelectorAll('[data-scene-preset]').forEach(b=>b.addEventListener('click',()=>{
-    clearRun();positions=b.dataset.scenePreset==='cross'?{vehicle:[0,-2.5],source:[0,2.3],obstacle:[0,0]}:{vehicle:[-2.2,1.8],source:[2.2,-1.7],obstacle:[.15,-.15]};startPosition=positions.vehicle.slice();selected='vehicle';root.dataset.interacted='true';runSimulation();
+    clearRun();positions=b.dataset.scenePreset==='cross'?{vehicle:[1.6,-.8],source:[-1.6,.8],obstacle:[0,0]}:{vehicle:[-1.6,1.2],source:[1.7,-1.3],obstacle:[.1,-.1]};startPosition=positions.vehicle.slice();selected='vehicle';root.dataset.interacted='true';runSimulation();
   }));
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&playing)pause();});
   new ResizeObserver(render).observe(canvas);render();
