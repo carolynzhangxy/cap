@@ -1,0 +1,47 @@
+[
+  {
+    "id": "100",
+    "duration": 72,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "ead864fa962a01cca7c72b91d8dff65145950d1806588d9d24a282d66b0082b9",
+    "size_bytes": 11093484
+  },
+  {
+    "id": "80",
+    "duration": 72,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "91fd4837ec70e0aaa1d5723ed167eb244e56af5727619bcfa3caaa4dcc0cc70f",
+    "size_bytes": 11187159
+  },
+  {
+    "id": "60",
+    "duration": 72,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "b93a7828ded9d763f3d48d9f88597385e93816e32cc73874a8247ab004055d2d",
+    "size_bytes": 11657611
+  },
+  {
+    "id": "40",
+    "duration": 72,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "bc0aa909e45d20a3f5f2db58490ef1c9577c964f5122acd63b14b00ec1f05e68",
+    "size_bytes": 13002512
+  },
+  {
+    "id": "all",
+    "duration": 72,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "b223e1c0bef8962883602672c5070b018ffa48cba25aa2243f15df65f74b3438",
+    "size_bytes": 12112749
+  }
+]

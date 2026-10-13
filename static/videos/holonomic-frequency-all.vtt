@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00.000 --> 00:08.000
+Four synchronized holonomic oscillator frequencies: 100, 80, 60 and 40 radians per model second. Same gains and initial state; 0.125 times model-time playback.
+
+00:08.000 --> 00:59.000
+The full workspace remains visible. The separate close-up shows the last two oscillator cycles. The robot body keeps a fixed orientation. Current mode q and model time are displayed.
+
+00:59.000 --> 01:12.000
+Each run stops at its first entry into the source neighborhood. Completed runs hold their actual terminal positions.
