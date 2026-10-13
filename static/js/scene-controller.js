@@ -1,6 +1,7 @@
 // Exact-position numerical illustrations of the paper's two oscillatory laws.
 // No gradient, planned path, smoothing, or projection of the integrated state.
-export const SETTINGS = Object.freeze({omega:100, gamma:12, kappa:.6, dstar:.85, delta:.25,
+export const FREQUENCIES = Object.freeze([100,36,16,9]);
+export const SETTINGS = Object.freeze({omega:36, gamma:12, kappa:.6, dstar:.85, delta:.25,
   step:.0001, sampleStep:.0005, horizon:12, targetRadius:.35, stopOnArrival:true});
 export const HOLONOMIC = Object.freeze({omega:100, a:.16, k:1.4, coverRadius:.92, delta:.15, horizon:30, step:.000025});
 
@@ -8,6 +9,10 @@ export function configuration(layout) {
   const model=layout.model||'nonholonomic';
   if(!['holonomic','nonholonomic'].includes(model))throw Error('Unknown vehicle model.');
   const settings={...SETTINGS,...(model==='holonomic'?HOLONOMIC:{})};
+  if(model==='nonholonomic'&&layout.omega!==undefined){
+    if(!FREQUENCIES.includes(Number(layout.omega)))throw Error('Choose one of the available frequency settings.');
+    settings.omega=Number(layout.omega);
+  }
   const r=Math.hypot(layout.source[0]-layout.obstacle[0],layout.source[1]-layout.obstacle[1]);
   const ref=Math.atan2(layout.source[1]-layout.obstacle[1],layout.source[0]-layout.obstacle[0]);
   const c={...settings,model,rho:Math.min(1,.7*(r-settings.dstar)),rhoB:Math.min(.8,.95*(r/Math.SQRT2-HOLONOMIC.coverRadius)),

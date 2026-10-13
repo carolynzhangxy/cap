@@ -11,7 +11,7 @@
   const frameRadius=3;
   const cameraCenter=[0,0];
   let cameraViewScale=1,cameraReframes=0;
-  const workerURL=new URL('scene-worker.js?v=3',document.currentScript.src);
+  const workerURL=new URL('scene-worker.js?v=4',document.currentScript.src);
   const colors={vehicle:'#155681',source:'#b3412d',obstacle:'#46583f',camera:'#17476a'};
   const assetRoot=new URL('../scene-realism/',document.currentScript.src).href;
   const artwork={
@@ -269,12 +269,13 @@
   function scheduleRun(){clearTimeout(rerunTimer);rerunTimer=setTimeout(runSimulation,350);}
   function runSimulation(){
     positions.vehicle=startPosition.slice();clearRun();reacquireVehicle();render();
-    const layout={...structuredClone(positions),model};worker=new Worker(workerURL,{type:'module'});const task=worker;
+    const layout={...structuredClone(positions),model,omega:Number($('scene-frequency').value)};worker=new Worker(workerURL,{type:'module'});const task=worker;
     root.dataset.phase='computing';$('scene-run').disabled=true;setStatus('Computing a new closed-loop trajectory…');updateModePanel();
     worker.onmessage=({data})=>{
       if(worker!==task)return;worker.terminate();worker=null;$('scene-run').disabled=false;
       if(data.error){root.dataset.phase='error';setStatus(data.error);updateModePanel();return;}
       run=data;
+      root.dataset.frequency=run.config.omega;
       if(model==='holonomic'){
         root.dataset.amplitude=run.config.a;root.dataset.frequency=run.config.omega;
         CAPMath.text($('scene-holo-parameters'),String.raw`This layout: \(a=${run.config.a.toFixed(3)},\ \omega=${run.config.omega.toFixed(1)}\,\mathrm{rad/s}\).`);
@@ -351,6 +352,7 @@
     document.querySelectorAll('[data-scene-model]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.sceneModel===model)));
     document.querySelectorAll('[data-model-details]').forEach(panel=>panel.hidden=panel.dataset.modelDetails!==model);
     $('scene-trail-controls').hidden=model!=='holonomic';
+    $('scene-frequency-controls').hidden=model!=='nonholonomic';
     CAPMath.text($('scene-model-copy'),model==='holonomic'?'Planar velocity input · oscillatory hybrid extremum seeking':String.raw`Translation along \(\psi\) · heading rotation governed by \(u_2\)`);
     $('scene-vehicle-description').textContent=model==='holonomic'?'Holonomic robot':'Nonholonomic robot';
     runSimulation();
@@ -358,6 +360,12 @@
   $('scene-run').addEventListener('click',runSimulation);
   $('scene-pause').addEventListener('click',()=>playing?pause():resume());
   $('scene-time').addEventListener('input',e=>{pause();seek(+e.target.value);});
+  $('scene-frequency').addEventListener('change',()=>{
+    const omega=Number($('scene-frequency').value),reduction=100-10*Math.sqrt(omega);
+    CAPMath.text($('scene-nh-frequency'),String.raw`\(\omega=${omega}\)`);
+    $('scene-frequency-copy').textContent=reduction?`${reduction}% lower heading rate than the original setting.`:'Original frequency and heading rate.';
+    runSimulation();
+  });
   document.querySelectorAll('[data-trail-style]').forEach(b=>b.addEventListener('click',()=>{
     trailStyle=b.dataset.trailStyle;
     document.querySelectorAll('[data-trail-style]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.trailStyle===trailStyle)));
