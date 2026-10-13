@@ -1,0 +1,10 @@
+WEBVTT
+
+00:00.000 --> 00:08.000
+Holonomic robot with amplitude a = 0.20. Fixed omega = 60 radians per model second; 0.125 times model-time playback.
+
+00:08.000 --> 00:58.000
+Only a changes. This changes both a times omega and 2k divided by a in the control input. Full views and local insets share their scales across all four amplitudes at each model time.
+
+00:58.000 --> 01:16.000
+The robot body stays fixed in orientation. Each run stops at first entry into the source neighborhood; completed runs hold their terminal position. Mode q = 2 throughout these runs.

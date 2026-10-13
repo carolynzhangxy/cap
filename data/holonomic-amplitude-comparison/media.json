@@ -1,0 +1,62 @@
+[
+  {
+    "id": "0p12",
+    "duration": 76,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "6d74645e9e8f01d73deef23f53b40cdeeaa4a84687be4c3baec1602d236311f2",
+    "size_bytes": 13289024,
+    "frames": 2280,
+    "strict_full_decode": "passed",
+    "faststart": true
+  },
+  {
+    "id": "0p16",
+    "duration": 76,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "65c340be430188b363d110eae10803e6e3432c6e2e4de362aa144fc78824578e",
+    "size_bytes": 13022934,
+    "frames": 2280,
+    "strict_full_decode": "passed",
+    "faststart": true
+  },
+  {
+    "id": "0p20",
+    "duration": 76,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "d66dbd597a23ad7648f1730a761bb89b961021041f025d6c4df2e307e0eba6ba",
+    "size_bytes": 12822828,
+    "frames": 2280,
+    "strict_full_decode": "passed",
+    "faststart": true
+  },
+  {
+    "id": "0p24",
+    "duration": 76,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "0c2187051da2ba0a120115924b0724a87f5350adace61a121dc1accbae08733f",
+    "size_bytes": 13629606,
+    "frames": 2280,
+    "strict_full_decode": "passed",
+    "faststart": true
+  },
+  {
+    "id": "all",
+    "duration": 76,
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "sha256": "bf9dae755929311c09658a5d2b7fa03978d451cb7643ad9b9461cb4fef229b51",
+    "size_bytes": 12926103,
+    "frames": 2280,
+    "strict_full_decode": "passed",
+    "faststart": true
+  }
+]
