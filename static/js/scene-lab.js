@@ -11,7 +11,7 @@
   const frameRadius=3;
   const cameraCenter=[0,0];
   let cameraViewScale=1,cameraReframes=0;
-  const workerURL=new URL('scene-worker.js?v=6',document.currentScript.src);
+  const workerURL=new URL('scene-worker.js?v=7',document.currentScript.src);
   const colors={vehicle:'#155681',source:'#b3412d',obstacle:'#46583f',camera:'#17476a'};
   const assetRoot=new URL('../scene-realism/',document.currentScript.src).href;
   const artwork={
@@ -277,8 +277,8 @@
       run=data;
       root.dataset.frequency=run.config.omega;
       if(model==='holonomic'){
-        root.dataset.amplitude=run.config.a;root.dataset.frequency=run.config.omega;
-        CAPMath.text($('scene-holo-parameters'),String.raw`This layout: \(a=${run.config.a.toFixed(3)},\ \omega=${run.config.omega.toFixed(1)}\,\mathrm{rad/s}\).`);
+        root.dataset.amplitude=run.config.a;root.dataset.frequency=run.config.omega;root.dataset.gain=run.config.k;
+        CAPMath.text($('scene-holo-parameters'),String.raw`This layout: \(a=${run.config.a.toFixed(3)},\ \omega=${run.config.omega.toFixed(0)}\,\mathrm{rad/s},\ k=${run.config.k.toFixed(3)}\).`);
       }
       runNumber++;root.dataset.runNumber=runNumber;root.dataset.result=run.reason;root.dataset.arrival=run.arrival??'';root.dataset.minClearance=run.minClearance;root.dataset.samples=run.points.length/5;root.dataset.switches=run.events.length;
       $('scene-time').max=run.duration;$('scene-time').step='any';$('scene-time').disabled=false;$('scene-pause').disabled=false;$('scene-run').innerHTML='<span aria-hidden="true">↺</span> Run again';
@@ -353,7 +353,7 @@
     document.querySelectorAll('[data-model-details]').forEach(panel=>panel.hidden=panel.dataset.modelDetails!==model);
     $('scene-trail-controls').hidden=model!=='holonomic';
     $('scene-frequency-controls').hidden=model!=='nonholonomic';
-    CAPMath.text($('scene-model-copy'),model==='holonomic'?'Planar velocity input · oscillatory hybrid source-seeking':String.raw`Translation along \(\psi\) · heading rotation governed by \(u_2\)`);
+    CAPMath.text($('scene-model-copy'),model==='holonomic'?String.raw`Planar velocity input · slower exploration at \(\omega=60\,\mathrm{rad/s}\)`:String.raw`Translation along \(\psi\) · heading rotation governed by \(u_2\)`);
     $('scene-vehicle-description').textContent=model==='holonomic'?'Holonomic robot':'Nonholonomic robot';
     runSimulation();
   }));

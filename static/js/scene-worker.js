@@ -1,5 +1,5 @@
-import {simulate} from './scene-controller.js?v=6';
+import {simulateIllustration} from './scene-illustration.js?v=1';
 self.onmessage=({data})=>{
-  try {const result=simulate(data);self.postMessage(result,[result.points.buffer]);}
+  try {const result=simulateIllustration(data);self.postMessage(result,[result.points.buffer]);}
   catch(error){self.postMessage({error:error.message});}
 };
