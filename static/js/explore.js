@@ -149,7 +149,15 @@
     if(image===sprites.car)ctx.drawImage(image,136,47,228,406,...destination);
     else ctx.drawImage(image,...destination);
   }
-  function label(text,pos,dx,dy){const [x,y]=screen(...pos);ctx.font='600 12px Arial';ctx.lineWidth=4;ctx.strokeStyle='#ffffff';ctx.fillStyle='#24343d';ctx.strokeText(text,x+dx,y+dy);ctx.fillText(text,x+dx,y+dy);}
+  function label(text,pos,halfWidth){
+    const [x,y]=screen(...pos),right=x+halfWidth*plot.s*camera.z+8;
+    // Anchor to the sprite's right edge. Axis labels must not leak their
+    // centered/right alignment into this label on the next redraw.
+    ctx.save();ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.font='600 12px Arial';ctx.lineWidth=4;ctx.lineJoin='round';
+    ctx.strokeStyle='#ffffff';ctx.fillStyle='#24343d';
+    ctx.strokeText(text,right,y);ctx.fillText(text,right,y);ctx.restore();
+  }
   function path(offset,lo,n,row){
     ctx.beginPath();let moved=false;
     for(let i=lo;i<n;i++){const r=data.samples[i],p=screen(r[offset],r[offset+1]);if(!moved){ctx.moveTo(...p);moved=true;}else ctx.lineTo(...p);}
@@ -177,7 +185,7 @@
     if($('explorer-estimate').checked){path(3,lo,n,row);ctx.setLineDash([6,5]);ctx.strokeStyle='#24382dbb';ctx.lineWidth=3.2;ctx.stroke();ctx.strokeStyle='#fff';ctx.lineWidth=1.6;ctx.stroke();ctx.setLineDash([]);}
     sprite(sprites.rock,data.obstacle,data.radius*2,data.radius*2);
     sprite(sprites.gas,data.source,.48,.64);sprite(sprites.car,data.initial,.36,.61);
-    if(camera.z<3){label('Source',data.source,18,-8);label('Initial',data.initial,16,20);label('Obstacle',data.obstacle,12,0);}
+    label('Source',data.source,.24);label('Initial',data.initial,.18);label('Obstacle',data.obstacle,data.radius);
     if($('explorer-truth').checked){const p=screen(row[1],row[2]);ctx.beginPath();ctx.arc(...p,4.5,0,2*Math.PI);ctx.fillStyle='#f5bf42';ctx.fill();ctx.strokeStyle='#263e35';ctx.lineWidth=1.3;ctx.stroke();}
     if($('explorer-estimate').checked){const [x,y]=screen(row[3],row[4]);ctx.beginPath();ctx.moveTo(x-5,y);ctx.lineTo(x+5,y);ctx.moveTo(x,y-5);ctx.lineTo(x,y+5);ctx.strokeStyle='#234736';ctx.lineWidth=3;ctx.stroke();ctx.strokeStyle='#fff';ctx.lineWidth=1.2;ctx.stroke();}
     ctx.restore();ctx.strokeStyle='#758981';ctx.lineWidth=1;ctx.strokeRect(plot.x,plot.y,plot.w,plot.h);
