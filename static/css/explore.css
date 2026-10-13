@@ -6,3 +6,12 @@
 @media(max-width:450px){.trajectory-explorer{padding:12px}.explorer-heading h3{font-size:25px}.explorer-heading p:not(.eyebrow){font-size:12px}.explorer-models{width:100%}.explorer-models button{flex:1;padding:10px 9px}.explorer-canvas-wrap{height:440px}.explorer-settings{gap:0 14px}.explorer-plot-tools{gap:5px}.explorer-plot-tools button{font-size:11px;padding:8px}.replay-controls>label{margin-top:8px;width:100%}#figure-dialog{padding:12px}#figure-dialog h2{font-size:16px}#figure-viewport{height:56dvh}.figure-toolbar{gap:5px;padding-bottom:10px}.figure-toolbar button{font-size:11px;padding:7px 9px}.toolbar-spacer{display:none}#figure-zoom{width:38px;font-size:11px}}
 
 @media(max-width:800px){.overview>.columns{margin-left:0;margin-right:0}.overview>.columns>.column{padding-left:0;padding-right:0}}
+
+/* Match visual localization at camera updates; retain held feedback for inspection. */
+.explorer-comparison-controls{padding:14px 0 16px;border-top:1px solid #dce5d4;border-bottom:1px solid #dce5d4;margin:12px 0 16px}
+.explorer-comparison-controls[hidden],.explorer-readouts>div[hidden]{display:none}
+.explorer-comparison-controls label{display:block;font-size:12px;color:#526b46}
+.explorer-comparison-controls select{display:block;width:100%;min-height:36px;margin-top:8px;padding:6px 8px;border:1px solid #cfdcc4;border-radius:5px;background:#fff;color:#34532c;font:inherit}
+.explorer-comparison-controls p{font-size:11px;line-height:1.7;color:#65765a;margin:9px 0 0}
+
+@media(max-width:900px){.explorer-comparison-controls{grid-column:1/-1}}

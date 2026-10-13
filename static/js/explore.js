@@ -99,7 +99,7 @@
   // Replay saved samples at their original coordinates. The camera changes; the data do not.
   const root=$('trajectory-explorer'),canvas=$('trajectory-canvas'),ctx=canvas.getContext('2d');
   const cache=new Map(),images=new Map();
-  let data=null,model='nonholonomic',now=0,playing=false,follow=false,frameId=0,lastFrame=0,requestId=0;
+  let data=null,sampleSets=null,model='nonholonomic',now=0,playing=false,follow=false,frameId=0,lastFrame=0,requestId=0;
   let camera={x:0,y:0,z:1},width=600,height=570,plot={x:55,y:20,w:400,h:500,s:60};
   let renderId=0,loadingPromise=null;
   function loadImage(name){
@@ -111,6 +111,9 @@
   function firstAfter(time){let lo=0,hi=data.samples.length;while(lo<hi){const mid=(lo+hi)>>1;if(data.samples[mid][0]<=time)lo=mid+1;else hi=mid;}return lo;}
   function state(){
     const n=firstAfter(now),a=data.samples[Math.max(0,n-1)],b=data.samples[Math.min(n,data.samples.length-1)];
+    // A camera observation becomes visible only when its recorded update occurs.
+    // Do not blend toward a future observation or invent a fresh between-frame estimate.
+    if(data.sampling==='previous')return {n,row:a};
     const f=b[0]>a[0]?clamp((now-a[0])/(b[0]-a[0]),0,1):0;
     return {n,row:[now,...[1,2,3,4].map(i=>a[i]+(b[i]-a[i])*f),a[5]]};
   }
@@ -194,10 +197,24 @@
     $('explorer-time-value').textContent=now.toFixed(3);$('explorer-time').value=String(now);
     $('explorer-position').textContent=`(${row[1].toFixed(3)}, ${row[2].toFixed(3)})`;
     $('explorer-error').textContent=Math.hypot(row[1]-row[3],row[2]-row[4]).toFixed(4)+' units';
+    if(model==='holonomic')$('explorer-sample-time').textContent=row[0].toFixed(3)+' s';
     $('explorer-mode').textContent='q = '+row[5];
     $('explorer-trail-note').textContent=recent?`Last ${data.recent} ${data.units}; earlier strokes are hidden.`:'The complete path up to the selected time.';
     // Semantic state supports QA without exposing private source data or adding UI clutter.
     canvas.dataset.time=String(now);canvas.dataset.sampleCount=String(n);canvas.dataset.mode=String(row[5]);canvas.dataset.zoom=String(camera.z);
+    canvas.dataset.sampleTime=String(row[0]);canvas.dataset.error=String(Math.hypot(row[1]-row[3],row[2]-row[4]));
+    canvas.dataset.comparison=model==='holonomic'?$('explorer-comparison').value:'illustration';
+  }
+  function setComparison(value){
+    if(model!=='holonomic'||!sampleSets)return;
+    const held=value==='held';data.samples=held?sampleSets.held:sampleSets.observations;
+    $('explorer-estimate-label').textContent=held?'Controller-held estimate':'Visual estimate';
+    $('explorer-error-label').textContent=held?'Held-estimate error':'Image-update error';
+    $('explorer-mode-label').textContent='Mode at sample';
+    $('explorer-comparison-note').textContent=held?
+      'All logged states. The estimate stays fixed between camera updates while the robot moves.':
+      'Both positions at the same camera update, every 0.01 s. Lines connect completed updates.';
+    scheduleDraw();
   }
   function pause(){playing=false;cancelAnimationFrame(frameId);frameId=0;$('explorer-play').textContent='▶ Play';}
   function animate(stamp){
@@ -216,13 +233,23 @@
     ['explorer-play','explorer-restart','explorer-time'].forEach(x=>$(x).disabled=true);
     document.querySelectorAll('[data-replay]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.replay===kind)));
     try{
-      if(!cache.has(kind))cache.set(kind,fetch(`data/explorer/${kind}.json?v=2`).then(r=>{if(!r.ok)throw new Error('Could not load the replay.');return r.json();}).catch(e=>{cache.delete(kind);throw e;}));
+      if(!cache.has(kind))cache.set(kind,fetch(`data/explorer/${kind}.json?v=3`).then(r=>{if(!r.ok)throw new Error('Could not load the replay.');return r.json();}).catch(e=>{cache.delete(kind);throw e;}));
       const record=await cache.get(kind);
       const names=[...record.backgrounds.map(x=>x[1]),'rock.png','gas.png','paper-car.png'];
       const assets=await Promise.all(names.map(loadImage));if(id!==requestId)return;
       const loaded=Object.fromEntries(names.map((name,i)=>[name,assets[i]]));
       backgrounds=loaded;sprites={rock:loaded['rock.png'],gas:loaded['gas.png'],car:loaded['paper-car.png']};
-      data=record;now=record.defaultTime;
+      data={...record};now=record.defaultTime;
+      sampleSets=kind==='holonomic'?{observations:record.samples,held:record.held_samples}:null;
+      $('explorer-comparison-controls').hidden=kind!=='holonomic';
+      $('explorer-sample-time-row').hidden=kind!=='holonomic';
+      $('explorer-comparison').value='observations';
+      if(kind==='holonomic')setComparison('observations');
+      else{
+        $('explorer-estimate-label').textContent='Estimated state';
+        $('explorer-error-label').textContent='Estimation error';
+        $('explorer-mode-label').textContent='Active mode';
+      }
       $('explorer-background').replaceChildren(...record.backgrounds.map(([text,value])=>new Option(text,value)),new Option('Plain','plain'));
       $('explorer-record-title').textContent=record.title;$('explorer-scope').textContent=record.scope;
       $('explorer-parameters').textContent=record.parameters;$('explorer-time-end').textContent=`${record.end} ${record.units}`;
@@ -236,6 +263,7 @@
   $('explorer-play').addEventListener('click',()=>playing?pause():play());
   $('explorer-restart').addEventListener('click',()=>{now=0;pause();play();});
   $('explorer-time').addEventListener('input',e=>{pause();now=Number(e.target.value);scheduleDraw();});
+  $('explorer-comparison').addEventListener('change',e=>{pause();setComparison(e.target.value);});
   ['explorer-truth','explorer-estimate','explorer-recent','explorer-background'].forEach(id=>$(id).addEventListener('change',scheduleDraw));
   $('explorer-zoom-in').addEventListener('click',()=>zoomPlot(1.5));
   $('explorer-zoom-out').addEventListener('click',()=>zoomPlot(1/1.5));
