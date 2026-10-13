@@ -11,7 +11,7 @@
   const frameRadius=3;
   const cameraCenter=[0,0];
   let cameraViewScale=1,cameraReframes=0;
-  const workerURL=new URL('scene-worker.js?v=4',document.currentScript.src);
+  const workerURL=new URL('scene-worker.js?v=5',document.currentScript.src);
   const colors={vehicle:'#155681',source:'#b3412d',obstacle:'#46583f',camera:'#17476a'};
   const assetRoot=new URL('../scene-realism/',document.currentScript.src).href;
   const artwork={

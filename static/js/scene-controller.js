@@ -1,7 +1,7 @@
 // Exact-position numerical illustrations of the paper's two oscillatory laws.
 // No gradient, planned path, smoothing, or projection of the integrated state.
 export const FREQUENCIES = Object.freeze([100,36,16,9]);
-export const SETTINGS = Object.freeze({omega:36, gamma:12, kappa:.6, dstar:.85, delta:.25,
+export const SETTINGS = Object.freeze({omega:16, gamma:12, kappa:.6, dstar:.85, delta:.25,
   step:.0001, sampleStep:.0005, horizon:12, targetRadius:.35, stopOnArrival:true});
 export const HOLONOMIC = Object.freeze({omega:100, a:.16, k:1.4, coverRadius:.92, delta:.15, horizon:30, step:.000025});
 
