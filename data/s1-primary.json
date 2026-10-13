@@ -1,7 +1,7 @@
 {
   "id": "s1-primary",
   "title": "Safe source seeking with learned perception",
-  "subtitle": "Six primary configurations \u00b7 Nonholonomic vehicle \u00b7 \u03c9 = 1600 \u00b7 A shared simulation clock",
+  "subtitle": "Six primary configurations \u00b7 Nonholonomic robot \u00b7 \u03c9 = 1600 \u00b7 A shared simulation clock",
   "file": "static/videos/s1-primary.mp4",
   "duration_s": 48.083333333333336,
   "simulation_duration_s": 1376.04,

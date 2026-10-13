@@ -1,7 +1,7 @@
 WEBVTT
 
 00:00.000 --> 00:10.000
-Holonomic vehicle: the car icon stays at the initial position, without rotation. Red is ground truth; dashed white is the visual estimate. Both curves use the same image-update timestamps, every 0.01 s; coordinates are unchanged.
+Holonomic robot: the car icon stays at the initial position, without rotation. Red is ground truth; dashed white is the visual estimate. Both curves use the same image-update timestamps, every 0.01 s; coordinates are unchanged.
 
 00:10.000 --> 00:25.000
 The recorded red and white trajectories progressively grow. Both panels show the same recorded run on illustrative backgrounds, at 0.25 times simulation speed.

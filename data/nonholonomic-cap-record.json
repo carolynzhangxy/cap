@@ -1,6 +1,6 @@
 {
   "id": "nonholonomic-cap-record",
-  "title": "Nonholonomic vehicle \u2014 growing recorded trajectory",
+  "title": "Nonholonomic robot \u2014 growing recorded trajectory",
   "kind": "recorded_trajectory_replay",
   "duration_s": 32,
   "fps": 24,

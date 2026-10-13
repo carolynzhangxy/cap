@@ -5,22 +5,22 @@
   const figures={
     'experimental-scene':{hint:'Select an object to see its role in the experiment.',items:[
       ['Overhead camera',[45,0,14,19],'An overhead RGB camera observes the workspace and provides images for localization.',"\\(\\theta=h(p)\\)"],
-      ['Signal source',[22,39,21,13],'The vehicle seeks the maximizer of the scalar field. The field sensor measures the signal at the current vehicle position.',"\\(\\mathcal A_J=\\operatorname*{arg\\,max}_{p\\in\\mathcal W}J(p)\\)"],
+      ['Signal source',[22,39,21,13],'The robot seeks the maximizer of the scalar field. The field sensor measures the signal at the current robot position.',"\\(\\mathcal A_J=\\operatorname*{arg\\,max}_{p\\in\\mathcal W}J(p)\\)"],
       ['Obstacle',[40,47,20,28],'The rock marks the obstacle region. The controller uses obstacle-relative geometry and clearance terms to navigate around it.','Maintain obstacle clearance'],
-      ['Vehicle',[60,65,17,21],'The blue vehicle is the moving plant. The controller receives an estimated position from visual perception.',"\\(\\hat p=p+e_\\sigma\\)"],
+      ['Robot',[60,65,17,21],'The blue robot is the moving plant. The controller receives an estimated position from visual perception.',"\\(\\hat p=p+e_\\sigma\\)"],
       ['Camera footprint',[9,36,80,57],'The cyan rays and ground outline illustrate the camera field of view. They describe the sensing setup, not a measured error bound.','Illustrated field of view']
     ]},
     'framework':{tour:true,hint:'Walk through one pass around the perception–control loop.',items:[
-      ['Observe',[0,2,45,44],'A camera image is generated from the physical state of the vehicle and its surroundings.',"\\(\\theta=h(p)\\)"],
+      ['Observe',[0,2,45,44],'A camera image is generated from the physical state of the robot and its surroundings.',"\\(\\theta=h(p)\\)"],
       ['Encode',[56,18,10,19],'RT-DETR extracts visual features used by the perception paths.','Shared visual features'],
       ['Adapt',[68,18,18,20],'CAP compares estimated localization error with the controller tolerance and checks presence and miss history.','Controller-aware routing'],
       ['Estimate',[89,18,10,20],'The selected visual observation updates the position estimate supplied to the controller. If no observation is selected, the prediction is retained.',"\\(\\hat p=\\ell_\\sigma(\\theta,\\zeta_\\sigma)\\)"],
       ['Control',[65,70,34,19],'The hybrid source-seeking controller combines the position estimate, measured scalar signal, and active mode to generate the control input.','Estimate → hybrid feedback → u'],
-      ['Move',[34,70,22,19],'The input changes the vehicle state, producing the scene observed at the next image update.','Vehicle dynamics → next observation']
+      ['Move',[34,70,22,19],'The input changes the robot state, producing the scene observed at the next image update.','Robot dynamics → next observation']
     ]},
     'cap-architecture':{tour:true,kind:'routing',hint:'Select a module, or change the inputs below to try the CAP routing rule.',items:[
       ['Shared features',[2,13,30,35],'A 640 × 640 RGB image is processed by RT-DETR. The expert paths reuse its shared visual features.','One image, shared features'],
-      ['Local expert',[1,60,10,28],'The Local Expert searches around the predicted vehicle location. It is evaluated first at each image update.','Local candidate + presence probability'],
+      ['Local expert',[1,60,10,28],'The Local Expert searches around the predicted robot location. It is evaluated first at each image update.','Local candidate + presence probability'],
       ['Adaptation criteria',[37,12,15,76],'The gate uses estimated error relative to the controller tolerance, the consecutive-miss count, and local presence probability.',"\\(\\hat\\epsilon_k/r_k^{\\mathrm{ctrl}},\\quad m_k,\\quad\\pi_{\\mathrm{local},k}\\)"],
       ['Full-frame',[66,14,8,22],'Full-frame processing is invoked if estimated error exceeds 0.8 times the controller tolerance, or there have been at least two consecutive misses.',"\\(\\hat\\epsilon_k>0.8r_k^{\\mathrm{ctrl}}\\ \\text{or}\\ m_k\\ge2\\)"],
       ['Context',[66,42,8,22],'When the full-frame condition is false, low local presence probability requests the Context Expert.',"\\(\\text{Otherwise, }\\pi_{\\mathrm{local},k}<0.5\\)"],
@@ -28,29 +28,29 @@
       ['Update & predict',[79,13,20,76],'At most one observation updates the estimate. With no selected observation, retain the prediction. The position and miss count feed the next update.',"\\(\\text{Observation}\\to\\hat p_k\\to\\text{next search location}\\)"]
     ]},
     'nonholonomic-loop':{tour:true,hint:'Follow the estimated state through the nonholonomic controller.',items:[
-      ['Camera',[89,49,10,38],'The camera observes the vehicle in the physical workspace.',"\\(\\theta=h(p)\\)"],
+      ['Camera',[89,49,10,38],'The camera observes the robot in the physical workspace.',"\\(\\theta=h(p)\\)"],
       ['CAP estimate',[71,50,17,29],'CAP supplies a position estimate using current observations and causal internal state.',"\\(\\hat p=\\ell_\\sigma(\\theta,\\zeta_\\sigma)\\)"],
       ['Manifold chart',[32,50,28,28],'Map estimated clearance and direction into manifold coordinates. The chart is defined outside the clearance boundary.',"\\(\\hat\\rho=\\log(\\|\\hat p-p_{\\mathcal O}\\|-d^\\star),\\quad\\hat\\vartheta=\\frac{\\hat p-p_{\\mathcal O}}{\\|\\hat p-p_{\\mathcal O}\\|}\\)"],
       ['Hybrid supervisor',[14,82,31,17],'Compare the active potential with the smallest mode potential. A jump selects a minimizing mode when permitted by the hysteresis condition; continuous states remain unchanged.',"\\(\\Gamma_{\\mathrm{noh}}(\\hat z,q)=V_q(\\hat z)-\\min_{r\\in\\mathcal Q}V_r(\\hat z);\\quad\\Gamma_{\\mathrm{noh}}\\ge\\delta_{\\mathrm{noh}}\\)"],
       ['Mode potential',[9,50,10,28],'The active localization function combines the measured scalar signal, radial safety barrier, and mode-dependent angular correction.',"\\(V_q(z)=-\\hat J_{\\mathcal M}(z)+B_{\\mathrm{safety}}(e^\\rho)+\\Psi_q(\\vartheta)\\)"],
       ['Oscillatory inputs',[0,7,41,35],"The signed translational input acts along \\(\\psi\\), while \\(u_2\\) rotates the heading continuously. The internal oscillator satisfies \\(\\dot\\eta=2\\pi\\omega S\\eta\\). Negative \\(u_1\\) reverses translation without reversing the heading.","\\(u_1=\\sqrt{\\frac{4\\pi\\gamma\\omega}{\\kappa}}\\langle e^{-\\kappa V_q(\\hat z)S}e_1,\\eta\\rangle;\\quad u_2=2\\pi\\sqrt\\omega\\)"],
-      ['Dynamics & position',[49,12,49,29],'The input drives admissible vehicle motion. The inverse chart maps manifold coordinates back to the physical position.',"\\(p=p_{\\mathcal O}+(d^\\star+e^\\rho)\\vartheta;\\quad\\dot p=u_1\\psi,\\quad\\dot\\psi=u_2S\\psi\\)"]
+      ['Dynamics & position',[49,12,49,29],'The input drives admissible robot motion. The inverse chart maps manifold coordinates back to the physical position.',"\\(p=p_{\\mathcal O}+(d^\\star+e^\\rho)\\vartheta;\\quad\\dot p=u_1\\psi,\\quad\\dot\\psi=u_2S\\psi\\)"]
     ]},
     'holonomic-loop':{tour:true,hint:'Follow the estimated state through the holonomic controller.',items:[
       ['Camera',[86,3,13,63],'Camera observations provide the input to learned visual perception.',"\\(\\theta=h(p)\\)"],
-      ['CAP estimate',[53,49,27,24],'The perception policy supplies the estimated vehicle position.',"\\(\\hat p=\\ell_\\sigma(\\theta,\\zeta_\\sigma)\\)"],
+      ['CAP estimate',[53,49,27,24],'The perception policy supplies the estimated robot position.',"\\(\\hat p=\\ell_\\sigma(\\theta,\\zeta_\\sigma)\\)"],
       ['Hybrid supervisor',[18,75,28,20],'The supervisor checks the active potential against the best available mode using hysteresis.',"\\(\\Gamma_{\\mathrm{hol}}(\\hat p,q)=V_q(\\hat p)-\\min_{r\\in\\mathcal Q}V_r(\\hat p)\\)"],
       ['Mode potential',[20,47,13,26],'The selected potential uses the scalar signal and a barrier for its covering region. It is infinite outside that mode’s domain.',"\\(V_q(p)=\\begin{cases}-\\hat J(p)+B(d_q(p)),&p\\in\\mathcal U_q,\\\\+\\infty,&p\\notin\\mathcal U_q.\\end{cases}\\)"],
       ['Periodic exploration',[30,31,23,17],'A periodic unit-vector oscillator supplies the exploration signal used by the feedback law.',"\\(\\dot\\mu=\\omega S\\mu\\)"],
       ['Feedback input',[2,3,32,28],'The mode-dependent feedback and oscillator combine into a planar velocity command.',"\\(u=-\\mathcal F_q(\\hat p)\\mu=a\\omega S\\mu-\\frac{2k}{a}V_q(\\hat p)\\mu\\)"],
-      ['Vehicle dynamics',[62,3,16,28],'The holonomic plant can realize planar velocity directly; its new position produces the next camera observation.',"\\(\\dot p=u\\)"]
+      ['Robot dynamics',[62,3,16,28],'The holonomic plant can realize planar velocity directly; its new position produces the next camera observation.',"\\(\\dot p=u\\)"]
     ]},
     'nonholonomic-geometry':{kind:'geometry',hint:'Inspect the geometry, then move the example point with the sliders.',items:[
-      ['Vehicle position',[15,65,15,17],String.raw`The physical position \(p\) is measured relative to the obstacle center \(p_{\mathcal O}\). The interactive example below uses workspace coordinates.`,"\\(p=(x,y)\\)"],
+      ['Robot position',[15,65,15,17],String.raw`The physical position \(p\) is measured relative to the obstacle center \(p_{\mathcal O}\). The interactive example below uses workspace coordinates.`,"\\(p=(x,y)\\)"],
       ['Clearance boundary',[55,15,24,36],String.raw`The disk \(p_{\mathcal O}+d^\star\mathbb B\) defines the excluded clearance region. The logarithmic chart requires \(\|p-p_{\mathcal O}\|>d^\star\).`,"\\(r>d^\\star\\)"],
       ['Radial clearance',[18,41,32,7],'Subtract the clearance radius from the obstacle-relative distance. Its logarithm is the radial manifold coordinate.',"\\(c=r-d^\\star,\\quad\\rho=\\log c\\)"],
-      ['Obstacle direction',[19,28,24,13],'The normalized obstacle-to-vehicle direction is a unit vector on the circle. It differs from the vehicle’s heading.',"\\(\\vartheta=\\frac{p-p_{\\mathcal O}}{\\|p-p_{\\mathcal O}\\|}\\)"],
-      ['Vehicle heading',[31,55,31,17],'The heading constrains the direction of translational motion for the nonholonomic plant.',"\\(\\psi=[\\cos\\alpha,\\sin\\alpha]^\\top\\)"]
+      ['Obstacle direction',[19,28,24,13],'The normalized obstacle-to-robot direction is a unit vector on the circle. It differs from the robot’s heading.',"\\(\\vartheta=\\frac{p-p_{\\mathcal O}}{\\|p-p_{\\mathcal O}\\|}\\)"],
+      ['Robot heading',[31,55,31,17],'The heading constrains the direction of translational motion for the nonholonomic plant.',"\\(\\psi=[\\cos\\alpha,\\sin\\alpha]^\\top\\)"]
     ]},
     'nonholonomic-trajectories':{kind:'comparison',model:'nonholonomic',hint:'Select a panel or magnified region to inspect the original paper figure.',items:[
       ['Leaf panel',[11,2,39,88],'Inspect the paper’s trajectories against the leaf background. Red denotes ground truth; white denotes the predicted state.','Original paper figure'],

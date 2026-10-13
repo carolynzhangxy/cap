@@ -1,6 +1,6 @@
 {
   "id": "paper-holonomic",
-  "title": "Holonomic vehicle \u2014 growing recorded trajectory",
+  "title": "Holonomic robot \u2014 growing recorded trajectory",
   "kind": "recorded_trajectory_replay",
   "duration_s": 30,
   "fps": 24,

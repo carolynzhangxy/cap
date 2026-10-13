@@ -9,7 +9,7 @@
   video.pause();video.poster=`static/images/frequency-${key}.jpg`;video.querySelector('source').src=src;
   video.setAttribute('aria-label',key==='all'?'Synchronized comparison of four nonholonomic controller frequencies':`Nonholonomic controller frequency ${key}`);
   document.getElementById('frequency-download').href=src;
-  document.getElementById('frequency-caption').textContent=key==='all'?'Four frequencies, one simulation clock. Each vehicle stops at its own first entry into the source neighborhood; completed runs hold their terminal pose.':`Frequency ω = ${key} · ${Math.sqrt(Number(key))} heading turns per model second. This clip uses the same clock and playback speed as the other three.`;
+  document.getElementById('frequency-caption').textContent=key==='all'?'Four frequencies, one simulation clock. Each robot stops at its own first entry into the source neighborhood; completed runs hold their terminal pose.':`Frequency ω = ${key} · ${Math.sqrt(Number(key))} heading turns per model second. This clip uses the same clock and playback speed as the other three.`;
   video.addEventListener('loadedmetadata',async()=>{if(stamp!==selection)return;video.currentTime=Math.min(time,video.duration);if(resume)try{await video.play();}catch{}},{once:true});
   video.load();
  }));

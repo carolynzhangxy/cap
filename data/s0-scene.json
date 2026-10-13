@@ -48,7 +48,7 @@
     ]
   },
   "renderer": "scripts/replay-renderer.js; native browser canvas, shared first-scene artwork and solid rover geometry",
-  "appearance": "The same detailed ground texture, natural boulder, blue solid rover, and supplied gray camera drone as the interactive setup. A square orthographic inset uses the matching fixed world footprint. Objects are illustrative and not the Isaac Sim experimental vehicle. A separate lightly washed-out local crop isolates short exploratory strokes; the fixed full overhead scene stays visible.",
+  "appearance": "The same detailed ground texture, natural boulder, blue solid rover, and supplied gray camera drone as the interactive setup. A square orthographic inset uses the matching fixed world footprint. Objects are illustrative and not the Isaac Sim experimental robot. A separate lightly washed-out local crop isolates short exploratory strokes; the fixed full overhead scene stays visible.",
   "terrain_asset": {
     "file": "dist/static/scene-realism/terrain.webp",
     "sha256": "55e3f8cd973a986de77fd229ac60aabc7371fe2da37ef71f9536d73eded856c3",
@@ -121,7 +121,7 @@
     "trail_history_recorded_s": 0.6,
     "pixel_size": 356,
     "magnification_relative_to_overhead": 80.4,
-    "heading_arrow": "Same controller-derived heading as the 3D vehicle; arrow length is a display annotation."
+    "heading_arrow": "Same controller-derived heading as the 3D robot; arrow length is a display annotation."
   },
   "verified_stream": {
     "codec": "h264",

@@ -2997,7 +2997,7 @@
     "The frame q field is captured for perception routing before the image correction triggers supervision. At t=0 it may retain the pre-jump mode while the trajectory sample is post-jump. For synchronized control display, start with config.initial_mode and apply recorded events through the selected sample time; keep any initial pre-jump hold explicitly paused.",
     "For denser replay, use true/estimated positions at frame.capture_s, compute heading at that same capture_s, and preserve the final trajectory record when the run completes. Cumulative full-frame use is the number of expert==1 rows divided by the number of elapsed frame rows.",
     "The interactive browser illustration uses the same law family with different gains, time/length scales, exact-position feedback and a relaxed first-entry stop. Its trajectory and metrics are not these frozen CAP experiments.",
-    "Rendered ground, drone and vehicle appearances are presentation assets, not the original network input frames or Isaac Sim experimental evidence.",
+    "Rendered ground, drone and robot appearances are presentation assets, not the original network input frames or Isaac Sim experimental evidence.",
     "Accounted perception cost is a fixed executed-module reference cost plus measured routing overhead; it excludes rendering and is not end-to-end wall-clock latency.",
     "This audit verifies recorded provenance, algebra and numerical interface consistency; it is not a proof of stability or a fresh validation of the trained perception network."
   ]
