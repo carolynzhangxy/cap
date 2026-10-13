@@ -1,0 +1,447 @@
+{
+  "scope": "Synthetic holonomic mechanism illustration; not a learned-perception experiment or an adversarial robustness guarantee.",
+  "layout": {
+    "model": "holonomic",
+    "vehicle": [
+      0,
+      -2
+    ],
+    "source": [
+      0,
+      2.4
+    ],
+    "obstacle": [
+      0,
+      0
+    ]
+  },
+  "columns": [
+    "model_time_s",
+    "x",
+    "y",
+    "q",
+    "distance_to_source",
+    "estimated_x",
+    "estimated_y",
+    "V1_estimate",
+    "V2_estimate",
+    "switching_gap"
+  ],
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration": 180,
+    "worldBounds": [
+      -3.4,
+      3.4,
+      -3.4,
+      3.4
+    ],
+    "chapters": [
+      {
+        "at": 0,
+        "title": "Same start; only initial q changes"
+      },
+      {
+        "at": 4,
+        "title": "Both complete routes"
+      },
+      {
+        "at": 70,
+        "title": "Same bounded error; switching versus fixed mode"
+      },
+      {
+        "at": 82,
+        "title": "Approach the threshold in slow motion"
+      },
+      {
+        "at": 94,
+        "title": "Immediately before the jump"
+      },
+      {
+        "at": 98,
+        "title": "Actual q = 1 to q = 2 jump"
+      },
+      {
+        "at": 103,
+        "title": "Continue both complete trajectories"
+      },
+      {
+        "at": 167,
+        "title": "What the comparison shows"
+      }
+    ]
+  },
+  "disturbance": {
+    "bound": 0.1,
+    "start": 2,
+    "rise": 1,
+    "end": 14,
+    "fall": 1,
+    "direction": [
+      1,
+      0
+    ]
+  },
+  "controllerSha256": "4eab3be91efc7d52f335dbf5108c9b219e6c887fa1ca7adbf7e590d9d3fb87c2",
+  "comparison": {
+    "routePair": "A and B differ only in initial mode.",
+    "errorPair": "C and D differ only in enabling the hybrid jump rule.",
+    "identicalPreJumpSamples": 676,
+    "bothFixedAndHybridArrive": true
+  },
+  "runs": [
+    {
+      "config": {
+        "omega": 60,
+        "gamma": 12,
+        "kappa": 0.6,
+        "dstar": 0.85,
+        "delta": 0.15,
+        "step": 0.00025,
+        "sampleStep": 0.004,
+        "horizon": 360,
+        "targetRadius": 0.35,
+        "stopOnArrival": true,
+        "a": 0.16,
+        "k": 0.05,
+        "coverRadius": 0.92,
+        "model": "holonomic",
+        "rho": 1,
+        "rhoB": 0.7382034611053281,
+        "ref": 1.5707963267948966,
+        "coverAngle": 0,
+        "heading": 1.5707963267948966,
+        "source": [
+          0,
+          2.4
+        ],
+        "obstacle": [
+          0,
+          0
+        ],
+        "phase": 1.5707963267948966,
+        "initialMode": 1
+      },
+      "layout": {
+        "model": "holonomic",
+        "vehicle": [
+          0,
+          -2
+        ],
+        "source": [
+          0,
+          2.4
+        ],
+        "obstacle": [
+          0,
+          0
+        ]
+      },
+      "fixedMode": false,
+      "error": {},
+      "events": [],
+      "arrival": 340.116,
+      "reason": "arrived",
+      "minClearance": 0.2648151561513937,
+      "maxError": 0,
+      "duration": 340.116,
+      "id": "A",
+      "name": "Initial q = 1",
+      "side": "left",
+      "verification": {
+        "halfStepMaxPositionError": 5.457134764001577e-10,
+        "halfStepArrivalDifference": 0.00012499999996862243,
+        "fineEvents": [],
+        "midlineX": [
+          -1.9312119568821395,
+          -1.558930206466496
+        ],
+        "thresholdExceededSamples": 0,
+        "thresholdExceededInterval": null
+      }
+    },
+    {
+      "config": {
+        "omega": 60,
+        "gamma": 12,
+        "kappa": 0.6,
+        "dstar": 0.85,
+        "delta": 0.15,
+        "step": 0.00025,
+        "sampleStep": 0.004,
+        "horizon": 360,
+        "targetRadius": 0.35,
+        "stopOnArrival": true,
+        "a": 0.16,
+        "k": 0.05,
+        "coverRadius": 0.92,
+        "model": "holonomic",
+        "rho": 1,
+        "rhoB": 0.7382034611053281,
+        "ref": 1.5707963267948966,
+        "coverAngle": 0,
+        "heading": 1.5707963267948966,
+        "source": [
+          0,
+          2.4
+        ],
+        "obstacle": [
+          0,
+          0
+        ],
+        "phase": 1.5707963267948966,
+        "initialMode": 2
+      },
+      "layout": {
+        "model": "holonomic",
+        "vehicle": [
+          0,
+          -2
+        ],
+        "source": [
+          0,
+          2.4
+        ],
+        "obstacle": [
+          0,
+          0
+        ]
+      },
+      "fixedMode": false,
+      "error": {},
+      "events": [],
+      "arrival": 340.1425,
+      "reason": "arrived",
+      "minClearance": 0.2756274659108078,
+      "maxError": 0,
+      "duration": 340.1425,
+      "id": "B",
+      "name": "Initial q = 2",
+      "side": "right",
+      "verification": {
+        "halfStepMaxPositionError": 5.330514452882757e-10,
+        "halfStepArrivalDifference": 0.00012499999996862243,
+        "fineEvents": [],
+        "midlineX": [
+          1.5688364510670112,
+          1.9462362244971942
+        ],
+        "thresholdExceededSamples": 0,
+        "thresholdExceededInterval": null
+      }
+    },
+    {
+      "config": {
+        "omega": 60,
+        "gamma": 12,
+        "kappa": 0.6,
+        "dstar": 0.85,
+        "delta": 0.15,
+        "step": 0.00025,
+        "sampleStep": 0.004,
+        "horizon": 360,
+        "targetRadius": 0.35,
+        "stopOnArrival": true,
+        "a": 0.16,
+        "k": 0.05,
+        "coverRadius": 0.92,
+        "model": "holonomic",
+        "rho": 1,
+        "rhoB": 0.7382034611053281,
+        "ref": 1.5707963267948966,
+        "coverAngle": 0,
+        "heading": 1.5707963267948966,
+        "source": [
+          0,
+          2.4
+        ],
+        "obstacle": [
+          0,
+          0
+        ],
+        "phase": 1.5707963267948966,
+        "initialMode": 1
+      },
+      "layout": {
+        "model": "holonomic",
+        "vehicle": [
+          0,
+          -2
+        ],
+        "source": [
+          0,
+          2.4
+        ],
+        "obstacle": [
+          0,
+          0
+        ]
+      },
+      "fixedMode": false,
+      "error": {
+        "bound": 0.1,
+        "start": 2,
+        "rise": 1,
+        "end": 14,
+        "fall": 1,
+        "direction": [
+          1,
+          0
+        ]
+      },
+      "events": [
+        {
+          "t": 2.70275,
+          "from": 1,
+          "to": 2,
+          "position": [
+            0.15304139625523794,
+            -1.9792602352130875
+          ],
+          "estimate": [
+            0.23178698459586294,
+            -1.9792602352130875
+          ],
+          "values": [
+            2.074859002557672,
+            1.924398066192778
+          ],
+          "gapBefore": 0.15046093636489388,
+          "gapAfter": 0,
+          "oscillator": [
+            0.9312461983408208,
+            0.364390611947905
+          ]
+        }
+      ],
+      "arrival": 341.399,
+      "reason": "arrived",
+      "minClearance": 0.24244065793496106,
+      "maxError": 0.10000000000000003,
+      "duration": 341.399,
+      "id": "C",
+      "name": "Switching enabled",
+      "side": "right",
+      "verification": {
+        "halfStepMaxPositionError": 0.00001178270118256884,
+        "halfStepArrivalDifference": 0,
+        "fineEvents": [
+          {
+            "t": 2.7026250000000003,
+            "from": 1,
+            "to": 2,
+            "position": [
+              0.15362566247978937,
+              -1.9803208522604425
+            ],
+            "estimate": [
+              0.2323555819872113,
+              -1.9803208522604425
+            ],
+            "values": [
+              2.075368388865886,
+              1.9253080286738014
+            ],
+            "gapBefore": 0.15006036019208446,
+            "gapAfter": 0,
+            "oscillator": [
+              0.9339529111327178,
+              0.35739608250052457
+            ]
+          }
+        ],
+        "midlineX": [
+          1.5679383524426536,
+          1.9463844624456177
+        ],
+        "thresholdExceededSamples": 0,
+        "thresholdExceededInterval": null
+      }
+    },
+    {
+      "config": {
+        "omega": 60,
+        "gamma": 12,
+        "kappa": 0.6,
+        "dstar": 0.85,
+        "delta": 0.15,
+        "step": 0.00025,
+        "sampleStep": 0.004,
+        "horizon": 360,
+        "targetRadius": 0.35,
+        "stopOnArrival": true,
+        "a": 0.16,
+        "k": 0.05,
+        "coverRadius": 0.92,
+        "model": "holonomic",
+        "rho": 1,
+        "rhoB": 0.7382034611053281,
+        "ref": 1.5707963267948966,
+        "coverAngle": 0,
+        "heading": 1.5707963267948966,
+        "source": [
+          0,
+          2.4
+        ],
+        "obstacle": [
+          0,
+          0
+        ],
+        "phase": 1.5707963267948966,
+        "initialMode": 1
+      },
+      "layout": {
+        "model": "holonomic",
+        "vehicle": [
+          0,
+          -2
+        ],
+        "source": [
+          0,
+          2.4
+        ],
+        "obstacle": [
+          0,
+          0
+        ]
+      },
+      "fixedMode": true,
+      "error": {
+        "bound": 0.1,
+        "start": 2,
+        "rise": 1,
+        "end": 14,
+        "fall": 1,
+        "direction": [
+          1,
+          0
+        ]
+      },
+      "events": [],
+      "arrival": 339.90625,
+      "reason": "arrived",
+      "minClearance": 0.26674876697267613,
+      "maxError": 0.10000000000000003,
+      "duration": 339.90625,
+      "id": "D",
+      "name": "Mode fixed at q = 1",
+      "side": "left",
+      "verification": {
+        "halfStepMaxPositionError": 5.605358169374573e-10,
+        "halfStepArrivalDifference": 0.00012499999996862243,
+        "fineEvents": [],
+        "midlineX": [
+          -1.9310548351096781,
+          -1.5588028045233375
+        ],
+        "thresholdExceededSamples": 307,
+        "thresholdExceededInterval": [
+          2.70275,
+          10.868
+        ]
+      }
+    }
+  ]
+}

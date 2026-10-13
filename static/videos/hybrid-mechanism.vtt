@@ -1,0 +1,25 @@
+WEBVTT
+
+00:00.000 --> 00:04.000
+Same start and oscillator state. Only the initial logic mode differs.
+
+00:04.000 --> 01:10.000
+A keeps q=1 and passes left. B keeps q=2 and passes right. Both arrive.
+
+01:10.000 --> 01:22.000
+C and D start identically in q=1. C enables switching; D holds the mode fixed.
+
+01:22.000 --> 01:34.000
+A smooth, directed position-estimation bias begins at model time 2 s. Its norm never exceeds 0.1.
+
+01:34.000 --> 01:38.000
+At model time 2.70275 s, the switching gap reaches the threshold. Position and oscillator state are unchanged at the jump.
+
+01:38.000 --> 01:43.000
+C switches from q=1 to q=2; its gap resets to zero. D keeps q=1.
+
+01:43.000 --> 02:47.000
+The same bias vanishes by model time 14 s. C takes the right route, D the left route; both arrive.
+
+02:47.000 --> 03:00.000
+This is a synthetic illustration of potential selection and switching, not evidence of fixed-mode failure or an adversarial robustness guarantee.
