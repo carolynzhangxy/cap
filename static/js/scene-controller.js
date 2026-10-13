@@ -57,18 +57,20 @@ export function velocity(t,x,y,q,c) {
 }
 export function simulate(layout,options={}) {
   const c={...configuration(layout),...options},h=c.step,stride=Math.max(1,Math.round(c.sampleStep/h));
-  const points=[],events=[];let [x,y]=layout.vehicle,q=2,arrival=null,minClearance=Infinity,reason='horizon';
+  const points=[],events=[],jumpStates=[];let [x,y]=layout.vehicle,q=c.initialMode??2,arrival=null,minClearance=Infinity,reason='horizon';
+  if(![1,2].includes(q))throw Error('Initial mode must be 1 or 2.');
   const clearance=(x,y)=>c.model==='holonomic'?Math.max(...coveringDistances(x,y,c)):Math.hypot(x-c.obstacle[0],y-c.obstacle[1])-c.dstar;
   if((c.model==='holonomic'?c.rhoB:c.rho)<=0||clearance(x,y)<=0)throw Error('Place the start and source outside the clearance boundary.');
   const total=Math.round(c.horizon/h);
   for(let i=0;i<=total;i++){
     const t=i*h,v=potentials(x,y,c),best=v[0]<=v[1]?1:2;
     if(!Number.isFinite(v[best-1])){reason='domain';break;}
-    if(v[q-1]-v[best-1]>=c.delta){events.push({t,from:q,to:best});q=best;}
+    const jumped=v[q-1]-v[best-1]>=c.delta;
+    if(jumped){events.push({t,from:q,to:best});jumpStates.push({t,position:[x,y],from:q,to:best,values:v.slice(),gapBefore:v[q-1]-v[best-1],gapAfter:0});q=best;}
     minClearance=Math.min(minClearance,clearance(x,y));
     const distance=Math.hypot(x-c.source[0],y-c.source[1]),stop=c.stopOnArrival&&distance<=c.targetRadius;
     // Preserve the actual first-entry sample, including between logging intervals.
-    if(i%stride===0||stop||i===total)points.push(t,x,y,q,distance);
+    if(i%stride===0||stop||i===total||(c.recordJumpSamples&&jumped))points.push(t,x,y,q,distance);
     if(stop){arrival=t;reason='arrived';break;}
     if(i===total)break;
     const a=velocity(t,x,y,q,c),b=velocity(t+h/2,x+h*a[0]/2,y+h*a[1]/2,q,c),d=velocity(t+h/2,x+h*b[0]/2,y+h*b[1]/2,q,c),e=velocity(t+h,x+h*d[0],y+h*d[1],q,c);
@@ -76,5 +78,5 @@ export function simulate(layout,options={}) {
     if(!Number.isFinite(xn)||!Number.isFinite(yn)||clearance(xn,yn)<=0){reason='domain';break;}
     x=xn;y=yn;
   }
-  return {points:new Float64Array(points),config:c,events,arrival,reason,minClearance,duration:points.length?points[points.length-5]:0};
+  return {points:new Float64Array(points),config:c,events,jumpStates,arrival,reason,minClearance,duration:points.length?points[points.length-5]:0};
 }

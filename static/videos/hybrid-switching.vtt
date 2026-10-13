@@ -1,0 +1,22 @@
+WEBVTT
+
+00:00.000 --> 00:03.000
+Two nearby initial positions. Both runs start in mode q = 1.
+
+00:03.000 --> 00:23.000
+Run A passes to the left of the obstacle. Mode q = 1 remains active.
+
+00:23.000 --> 00:28.000
+Run B approaches the hysteresis threshold. Model time is slowed to inspect the event.
+
+00:28.000 --> 00:30.000
+At t = 0.25185 s, V1 - V2 = 0.150087, exceeding the threshold 0.15.
+
+00:30.000 --> 00:34.000
+The mode jumps from q = 1 to q = 2. The switching gap resets to zero; position remains continuous.
+
+00:34.000 --> 00:51.000
+Run B continues with V2 and passes to the right of the obstacle.
+
+00:51.000 --> 01:06.000
+Synchronized comparison: opposite routes, the same source. Colors indicate the actual active mode.
