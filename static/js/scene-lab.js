@@ -353,7 +353,7 @@
     document.querySelectorAll('[data-model-details]').forEach(panel=>panel.hidden=panel.dataset.modelDetails!==model);
     $('scene-trail-controls').hidden=model!=='holonomic';
     $('scene-frequency-controls').hidden=model!=='nonholonomic';
-    CAPMath.text($('scene-model-copy'),model==='holonomic'?'Planar velocity input · oscillatory hybrid extremum seeking':String.raw`Translation along \(\psi\) · heading rotation governed by \(u_2\)`);
+    CAPMath.text($('scene-model-copy'),model==='holonomic'?'Planar velocity input · oscillatory hybrid source-seeking':String.raw`Translation along \(\psi\) · heading rotation governed by \(u_2\)`);
     $('scene-vehicle-description').textContent=model==='holonomic'?'Holonomic robot':'Nonholonomic robot';
     runSimulation();
   }));
