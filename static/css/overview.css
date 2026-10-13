@@ -1,0 +1,48 @@
+/* A short visual introduction; the formal description remains available on demand. */
+#overview{padding-top:76px;padding-bottom:76px;--overview-accent:#39727a;--overview-tint:#eff6f5}
+#overview[data-step="1"]{--overview-accent:#4b7043;--overview-tint:#f0f5eb}
+#overview[data-step="2"]{--overview-accent:#a26646;--overview-tint:#faf3ed}
+.overview-intro{display:grid;grid-template-columns:1.5fr 1fr;align-items:end;gap:55px;margin-bottom:38px}
+.overview-intro .eyebrow{margin-bottom:18px;color:#6b7d63}
+#overview-title{font-size:43px;line-height:1.18;letter-spacing:-.035em;color:#294731;margin:0}
+#overview-title em{font-style:normal;color:#758567}
+.overview-lead{font-size:16px;line-height:1.75;color:#586653;margin:0 0 3px;max-width:370px}
+.overview-loop{border-top:1px solid #dce3d6}
+.overview-loop-heading{display:flex;justify-content:space-between;gap:16px;padding:21px 0 18px;font-size:10px;letter-spacing:.12em;color:#6c7c61}
+.overview-loop-heading .overview-click-hint{letter-spacing:0;color:#697761;font-size:12px}
+.overview-click-hint>span{margin-left:8px}
+.overview-steps{display:grid;grid-template-columns:1fr 1fr 1.14fr;gap:0;border-bottom:1px solid #dce3d6}
+.overview-step{position:relative;display:flex;align-items:flex-start;gap:13px;width:100%;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;padding:20px 15px 23px 12px;text-align:left;background:transparent;color:#294731;cursor:pointer;font-family:Arial,sans-serif;transition:background .2s,border-color .2s}
+.overview-step[aria-pressed=true]{background:var(--overview-tint);border-bottom-color:var(--overview-accent)}
+.overview-step:hover{background:#f0f4eb}
+.overview-step-number{display:grid;place-items:center;flex-shrink:0;width:27px;height:27px;margin-top:1px;border:1px solid #d4dfcd;border-radius:50%;font-size:10px;color:#65785b}
+.overview-step[aria-pressed=true] .overview-step-number{background:var(--overview-accent);border-color:var(--overview-accent);color:#fff}
+.overview-step strong{display:block;font-family:Georgia,serif;font-size:24px;letter-spacing:-.025em;font-weight:400;line-height:1.25;color:#294731}
+.overview-step>span>span{display:block;font-size:12px;line-height:1.6;color:#697860;margin-top:9px}
+.overview-step-arrow{font-size:21px;line-height:1.3;margin-left:auto;padding-left:7px;color:#8b9b80}
+.overview-explanation{display:grid;grid-template-columns:180px minmax(0,1fr);align-items:center;gap:24px;min-height:97px;padding:21px 12px}
+.overview-active-label{font-size:10px;letter-spacing:.08em;line-height:1.8;color:var(--overview-accent);font-weight:600}
+.overview-explanation>p{font-size:14px;line-height:1.75;color:#596752;max-width:785px;margin:0}
+#overview .framework-figure{margin:0;padding:0;border:0}
+#overview .figure-stage{padding:18px;border:1px solid #e0e6da;border-radius:12px;background:#fff}
+#overview .figure-hotspots{inset:18px}
+#overview .figure-selected-region{border-color:var(--overview-accent);background:transparent;box-shadow:0 0 0 3px #ffffffcc;border-width:2px;border-radius:8px}
+#overview.overview-ready .figure-hotspot{display:none}
+#overview .figure-guide[hidden]{display:none}
+#overview .framework-figure figcaption{display:flex;justify-content:space-between;gap:15px;margin-top:14px;padding:0 2px;color:#77836d;font-size:12px}
+#overview .framework-figure figcaption a{font-size:11px;color:#587447;white-space:nowrap}
+.overview-footer{display:flex;align-items:flex-start;gap:28px;border-top:1px solid #dce3d6;margin-top:25px;padding-top:3px}
+.overview-theory{flex:1;border:0;margin:0;padding:0;min-width:0}
+.overview-theory>summary{display:flex;align-items:center;gap:22px;list-style:none;padding:20px 0;font-size:14px;color:#455f3c;cursor:pointer;width:fit-content}
+.overview-theory>summary::-webkit-details-marker{display:none}
+.overview-theory>summary>span{font-size:21px;line-height:1;transition:transform .2s}
+.overview-theory[open]>summary>span{transform:rotate(45deg)}
+.overview-theory-copy{max-width:760px;padding-bottom:16px}
+.overview-theory-copy p{font-size:14px;line-height:1.85;color:#5b6c50;margin-bottom:15px}
+.overview-theory-copy strong{color:#34542e;font-weight:600}
+.overview-theory-copy>a{display:inline-block;font-size:13px;margin-top:4px;color:#3c6738}
+.overview-try{padding:21px 0;white-space:nowrap;font-size:13px;color:#49683d}
+.overview-try>span{margin-left:10px}
+@media(max-width:1000px){.overview-intro{gap:28px;grid-template-columns:1.4fr 1fr}#overview-title{font-size:36px}.overview-lead{font-size:14px}.overview-step{gap:8px;padding:17px 10px}.overview-step strong{font-size:21px}.overview-step-arrow{display:none}.overview-step>span>span{font-size:11px}}
+@media(max-width:650px){#overview{padding-top:48px;padding-bottom:48px}.overview-intro{display:block;margin-bottom:26px}#overview-title{font-size:33px;line-height:1.2}.overview-lead{font-size:14px;line-height:1.8;max-width:none;margin-top:19px}.overview-loop-heading{padding:18px 0 12px;display:block;font-size:9px}.overview-click-hint{display:block;margin-top:8px}.overview-steps{grid-template-columns:1fr}.overview-step{align-items:center;gap:14px;padding:13px 10px;border-bottom-width:0;border-left:3px solid transparent;margin:0}.overview-step[aria-pressed=true]{border-left-color:var(--overview-accent)}.overview-step strong{font-size:22px}.overview-step>span>span{font-size:12px;margin-top:3px}.overview-step-number{width:26px;height:26px}.overview-step-arrow{display:block;font-size:18px}.overview-explanation{grid-template-columns:1fr;gap:6px;padding:19px 2px;min-height:143px}.overview-active-label{font-size:9px}.overview-explanation>p{font-size:13px;line-height:1.75}#overview .figure-stage{padding:8px;border-radius:8px}#overview .figure-hotspots{inset:8px}#overview .figure-selected-region{border-width:1.5px;border-radius:4px}#overview .framework-figure figcaption{font-size:10px;gap:10px;line-height:1.7}#overview .framework-figure figcaption a{font-size:10px}.overview-footer{display:block;margin-top:20px;padding-top:0}.overview-theory>summary{font-size:13px;padding:17px 0}.overview-theory-copy p{font-size:13px}.overview-try{display:inline-block;font-size:12px;padding:7px 0 0}.overview-theory-copy>a{font-size:12px}}
+@media(prefers-reduced-motion:reduce){#overview *{transition:none!important}}

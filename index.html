@@ -27,8 +27,10 @@
   <link rel="stylesheet" href="static/css/explore.css?v=1">
   <script src="static/js/explore.js?v=4" defer></script>
   <link rel="stylesheet" href="static/css/figure-guides.css?v=2">
-  <script src="static/js/figure-guides.js?v=5" defer></script>
+  <script src="static/js/figure-guides.js?v=6" defer></script>
   <link rel="stylesheet" href="static/css/presentation.css?v=1">
+  <link rel="stylesheet" href="static/css/overview.css?v=1">
+  <script src="static/js/overview.js?v=1" defer></script>
   <link rel="stylesheet" href="static/css/mathematics.css?v=3">
   <link rel="stylesheet" href="static/css/scene-lab.css?v=19">
   <script src="static/js/scene-lab.js?v=25" defer></script>
@@ -170,23 +172,32 @@ M834 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">�
 
 
 <section class="section-wrap overview" id="overview" aria-labelledby="overview-title">
-  <div class="section-heading"><p class="eyebrow">OVERVIEW</p><h2 id="overview-title">Perception-aware hybrid source-seeking</h2></div>
-  <div class="columns is-variable is-7">
-    <div class="column is-7 content intro-copy">
+  <div class="overview-intro">
+    <div><p class="eyebrow">THE IDEA, AT A GLANCE</p><h2 id="overview-title">Find the source.<br><em>Navigate around the obstacle.</em></h2></div>
+    <p class="overview-lead">A robot follows local signal measurements toward an unknown source, using camera-based position estimates to guide its motion.</p>
+  </div>
+  <div class="overview-loop">
+    <div class="overview-loop-heading"><span>ONE CONTINUOUS FEEDBACK LOOP</span><span class="overview-click-hint">Select a step to follow the diagram <span aria-hidden="true">↓</span></span></div>
+    <div class="overview-steps" role="group" aria-label="Explore the three steps of the feedback loop">
+      <button type="button" class="overview-step" data-overview-step="0" aria-pressed="true" aria-controls="overview-explanation"><span class="overview-step-number">01</span><span><strong>Observe</strong><span>Locate the robot. Measure the signal.</span></span><span class="overview-step-arrow" aria-hidden="true">→</span></button>
+      <button type="button" class="overview-step" data-overview-step="1" aria-pressed="false" aria-controls="overview-explanation"><span class="overview-step-number">02</span><span><strong>Adapt perception</strong><span>Widen the visual search when needed.</span></span><span class="overview-step-arrow" aria-hidden="true">→</span></button>
+      <button type="button" class="overview-step" data-overview-step="2" aria-pressed="false" aria-controls="overview-explanation"><span class="overview-step-number">03</span><span><strong>Move toward the source</strong><span>Explore, switch modes, avoid the obstacle.</span></span><span class="overview-step-arrow" aria-hidden="true">↻</span></button>
+    </div>
+    <div class="overview-explanation" id="overview-explanation" aria-live="polite" aria-atomic="true"><span class="overview-active-label">01 / OBSERVE</span><p>A camera image supports position estimation. A separate sensor measures the scalar signal at the robot’s current position.</p></div>
+    <figure class="paper-figure framework-figure">
+      <button class="figure-open" data-figure-title="Closed-loop perception–control framework" aria-label="Enlarge the perception and control framework"><img src="static/paper/framework.webp" width="2400" height="885" loading="lazy" alt="Feedback loop: camera observations enter CAP, CAP estimates the robot position, and the hybrid controller drives the robot. The next observation closes the loop."></button>
+      <figcaption><span>Observe → adapt → move → observe again.</span><a href="static/paper/framework.pdf" target="_blank" rel="noopener">Original figure PDF ↗</a></figcaption>
+    </figure>
+  </div>
+  <div class="overview-footer">
+    <details class="overview-theory"><summary>The mathematical idea <span aria-hidden="true">+</span></summary><div class="overview-theory-copy">
       <p>The objective is to steer the robot toward the maximizer set <span class="math-inline" data-tex="\mathcal A_J"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="script">A</mi><mi>J</mi></msub></mrow><annotation encoding="application/x-tex">\mathcal A_J</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathcal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.09618em;">J</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></span> of an unknown scalar field J while maintaining the admissible obstacle-free region. The controller uses online field measurements at the physical robot position and a calibrated position estimate supplied by learned visual perception; it does not require a field model or gradient measurements.</p>
       <p><strong>Controller-aware Adaptive Perception (CAP)</strong> adjusts visual processing according to the localization accuracy needed along the trajectory. A local expert is evaluated first. The controller’s tolerance, presence probability, and miss history determine whether to invoke a context or full-frame expert.</p>
       <p>The holonomic design uses a periodic exploration signal and obstacle-aware covering regions. The nonholonomic design uses obstacle-relative manifold coordinates and oscillatory inputs whose averaged effect is characterized by Lie brackets. Hysteretic switching selects among mode-dependent localization functions. The manuscript establishes practical stability and obstacle clearance under its stated assumptions and parameter-selection conditions.</p>
-    </div>
-    <div class="column is-5 process" aria-label="Perception and control sequence">
-      <div><span>01</span><p><strong>Observe</strong>Camera image and scalar source measurement</p></div>
-      <div><span>02</span><p><strong>Adapt</strong>Local, context, or full-frame visual processing</p></div>
-      <div><span>03</span><p><strong>Control</strong>Oscillatory source seeking with hybrid mode selection</p></div>
-    </div>
+      <a href="#mathematical-formulation">Explore the equations and assumptions →</a>
+    </div></details>
+    <a class="overview-try" href="#experimental-setup">Try it in the interactive scene <span aria-hidden="true">↗</span></a>
   </div>
-  <figure class="paper-figure framework-figure">
-    <button class="figure-open" data-figure-title="Closed-loop perception–control framework" aria-label="Enlarge the perception and control framework"><img src="static/paper/framework.webp" width="2400" height="885" loading="lazy" alt="Camera observations pass through Controller-aware Adaptive Perception to the hybrid source-seeking controller, robot dynamics, and back to observations."></button>
-    <figcaption><strong>The perception–control loop.</strong> CAP supplies position estimates to the hybrid source-seeking controller. <a href="static/paper/framework.pdf" target="_blank" rel="noopener">Original PDF ↗</a></figcaption>
-  </figure>
 </section>
 
 <section class="paper-method-section" id="paper-figures" aria-labelledby="figures-title"><div class="section-wrap">

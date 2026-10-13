@@ -132,6 +132,12 @@
     figure.closest('details')?.addEventListener('toggle',e=>{if(!e.target.open)stop();});
   }
 
+  // The concise overview uses the same figure state as the enlarged inspector.
+  window.addEventListener('cap:select-figure-step',e=>{
+    const {key,index}=e.detail||{},instance=instances.get(key);
+    if(instance&&Number.isInteger(index)&&index>=0&&index<instance.spec.items.length)instance.select(index);
+  });
+
   function slider(id,label,min,max,step,value,parent){
     const row=make('label','guide-slider');row.htmlFor=id;const top=make('span');const output=make('output');output.htmlFor=id;top.append(document.createTextNode(label),output);
     const input=make('input');Object.assign(input,{id,type:'range',min,max,step,value});row.append(top,input);parent.append(row);return {input,output};
