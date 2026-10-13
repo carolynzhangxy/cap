@@ -7,6 +7,7 @@
   let positions=structuredClone(initial),height=4.2,view=matchMedia('(max-width:550px)').matches?'top':'perspective',selected='vehicle',drag=null,model='nonholonomic';
   const radius=.62,bodyRadius=.2;
   let startPosition=initial.vehicle.slice(),run=null,worker=null,playTime=0,playing=false,lastFrame=0,raf=0,rerunTimer=0,trailLengths=[],trailIndices=[],trailStyle='sampled',runNumber=0;
+  let trajectoryExtents=new Float64Array(0);
   // Extend the displayed ground as the observed footprint grows. Never inspect
   // future trajectory samples to move the camera or enlarge its view.
   const initialFrameRadius=3;
@@ -186,7 +187,8 @@
   function expandTerrain(){
     // Include the entire observed square and the robot body, not just its center.
     // The retained radius also keeps previously drawn trail samples on the soil.
-    const extent=Math.max(cameraHalfExtent()+.3,...positions.vehicle.map(p=>Math.abs(p)+.6));
+    const visibleTrailExtent=run?trajectoryExtents[sampleIndex()]||0:0;
+    const extent=Math.max(cameraHalfExtent()+.3,visibleTrailExtent+.6,...positions.vehicle.map(p=>Math.abs(p)+.6));
     if(extent<=frameRadius+1e-9)return false;
     frameRadius=Math.ceil(extent*2)/2;
     return true;
@@ -297,6 +299,10 @@
       if(worker!==task)return;worker.terminate();worker=null;$('scene-run').disabled=false;
       if(data.error){root.dataset.phase='error';setStatus(data.error);updateModePanel();return;}
       run=data;
+      // Prefix bounds cover only the already-visible trajectory, including when
+      // a reader scrubs forward. Future samples never drive the camera or floor.
+      trajectoryExtents=new Float64Array(run.points.length/5);
+      for(let i=0;i<trajectoryExtents.length;i++)trajectoryExtents[i]=Math.max(i?trajectoryExtents[i-1]:0,Math.abs(run.points[i*5+1]),Math.abs(run.points[i*5+2]));
       root.dataset.frequency=run.config.omega;
       if(model==='holonomic'){
         root.dataset.amplitude=run.config.a;root.dataset.frequency=run.config.omega;root.dataset.gain=run.config.k;
